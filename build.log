@@ -1,0 +1,333 @@
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/opt/homebrew/Cellar/maven/3.9.11/libexec/lib/guice-5.1.0-classes.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.example:nbdsig >-------------------------
+[INFO] Building nbdsig 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] 6 problems were encountered while building the effective model for org.openjfx:javafx-controls:jar:win:19.0.2.1 during dependency collection step for project (use -X to see details)
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ nbdsig ---
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ nbdsig ---
+[INFO] Copying 33 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ nbdsig ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 15 source files with javac [debug target 19] to target/classes
+[WARNING] location of system modules is not set in conjunction with -source 19
+  not setting the location of system modules may lead to class files that cannot run on JDK 19
+    --release 19 is recommended instead of -source 19 -target 19 because it sets the location of system modules automatically
+[WARNING] module name in --add-exports option not found: javafx.graphics
+[INFO] /Users/anatolijdyrul/Documents/Projects/NBDsig/src/main/java/com/example/util/PDFSigner.java: /Users/anatolijdyrul/Documents/Projects/NBDsig/src/main/java/com/example/util/PDFSigner.java uses unchecked or unsafe operations.
+[INFO] /Users/anatolijdyrul/Documents/Projects/NBDsig/src/main/java/com/example/util/PDFSigner.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ nbdsig ---
+[INFO] skip non existing resourceDirectory /Users/anatolijdyrul/Documents/Projects/NBDsig/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ nbdsig ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ nbdsig ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.4.1:jar (default-jar) @ nbdsig ---
+[INFO] Building jar: /Users/anatolijdyrul/Documents/Projects/NBDsig/target/nbdsig-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- native:0.9.28:compile-no-fork (default) @ nbdsig ---
+[INFO] Found GraalVM installation from JAVA_HOME variable.
+[INFO] Executing: /Users/anatolijdyrul/Documents/Program Files/graalvm-jdk-24.0.2+11.1/Contents/Home/bin/native-image -cp /Users/anatolijdyrul/Documents/Projects/NBDsig/target/nbdsig-1.0-SNAPSHOT.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-controls/19.0.2.1/javafx-controls-19.0.2.1-win.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-controls/19.0.2.1/javafx-controls-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-graphics/19.0.2.1/javafx-graphics-19.0.2.1.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-graphics/19.0.2.1/javafx-graphics-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-base/19.0.2.1/javafx-base-19.0.2.1.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-base/19.0.2.1/javafx-base-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-fxml/19.0.2.1/javafx-fxml-19.0.2.1-win.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-fxml/19.0.2.1/javafx-fxml-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-controls/19.0.2.1/javafx-controls-19.0.2.1.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-swing/19.0.2.1/javafx-swing-19.0.2.1.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-swing/19.0.2.1/javafx-swing-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/apache/pdfbox/pdfbox/2.0.29/pdfbox-2.0.29.jar:/Users/anatolijdyrul/.m2/repository/org/apache/pdfbox/fontbox/2.0.29/fontbox-2.0.29.jar:/Users/anatolijdyrul/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/anatolijdyrul/.m2/repository/org/apache/pdfbox/pdfbox-tools/2.0.29/pdfbox-tools-2.0.29.jar:/Users/anatolijdyrul/.m2/repository/org/apache/pdfbox/pdfbox-debugger/2.0.29/pdfbox-debugger-2.0.29.jar:/Users/anatolijdyrul/.m2/repository/org/bouncycastle/bcprov-jdk15on/1.70/bcprov-jdk15on-1.70.jar:/Users/anatolijdyrul/.m2/repository/org/bouncycastle/bcpkix-jdk15on/1.70/bcpkix-jdk15on-1.70.jar:/Users/anatolijdyrul/.m2/repository/org/bouncycastle/bcmail-jdk15on/1.70/bcmail-jdk15on-1.70.jar:/Users/anatolijdyrul/.m2/repository/org/bouncycastle/bcutil-jdk15on/1.70/bcutil-jdk15on-1.70.jar --no-fallback -o /Users/anatolijdyrul/Documents/Projects/NBDsig/target/nbdsig --no-fallback -H:+ReportExceptionStackTraces --initialize-at-build-time=org.bouncycastle,org.apache.pdfbox,javafx -H:+AddAllCharsets -H:IncludeResources=.*\.(fxml|css|png)$ com.example.Launcher
+Warning: The option '-H:IncludeResources=.*\.(fxml|css|png)$' is experimental and must be enabled via '-H:+UnlockExperimentalVMOptions' in the future.
+Warning: Please re-evaluate whether any experimental option is required, and either remove or unlock it. The build output lists all active experimental options, including where they come from and possible alternatives. If you think an experimental option should be considered as stable, please file an issue.
+========================================================================================================================
+GraalVM Native Image: Generating 'nbdsig' (executable)...
+========================================================================================================================
+For detailed information and explanations on the build output, visit:
+https://github.com/oracle/graal/blob/master/docs/reference-manual/native-image/BuildOutput.md
+------------------------------------------------------------------------------------------------------------------------
+Warning: The host machine does not support all features of 'x86-64-v3'. Falling back to '-march=compatibility' for best compatibility.
+[1/8] Initializing...                                                                                   (17,1s @ 0,18GB)
+ Java version: 24.0.2+11, vendor version: Oracle GraalVM 24.0.2+11.1
+ Graal compiler: optimization level: 2, target machine: compatibility, PGO: ML-inferred
+ C compiler: cc (apple, x86_64, 17.0.0)
+ Garbage collector: Serial GC (max heap size: 80% of RAM)
+ 1 user-specific feature(s):
+ - com.oracle.svm.thirdparty.gson.GsonFeature
+------------------------------------------------------------------------------------------------------------------------
+ 1 experimental option(s) unlocked:
+ - '-H:IncludeResources': Use a resource-config.json in your META-INF/native-image/<groupID>/<artifactID> directory instead. (origin(s): command line)
+------------------------------------------------------------------------------------------------------------------------
+Build resources:
+ - 12,09GB of memory (75,6% of 16,00GB system memory, determined at start)
+ - 10 thread(s) (100,0% of 10 available processor(s), determined at start)
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.sun.glass.utils.NativeLibLoader in an unnamed module (file:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-graphics/19.0.2.1/javafx-graphics-19.0.2.1-mac.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+[2/8] Performing analysis...  []                                                                         (9,3s @ 0,25GB)
+    2 066 reachable types   (52,7% of    3 920 total)
+    1 853 reachable fields  (31,8% of    5 835 total)
+    7 849 reachable methods (28,3% of   27 715 total)
+      725 types,     5 fields, and    86 methods registered for reflection
+
+Error: Class initialization of javafx.stage.Screen failed. Use the option 
+
+    '--initialize-at-run-time=javafx.stage.Screen'
+
+ to explicitly request initialization of this class at run time. Exception thrown by the class initializer:
+
+java.lang.IllegalStateException: This operation is permitted on the event thread only; currentThread = ForkJoinPool.commonPool-worker-3
+	at com.sun.glass.ui.Application.checkEventThread(Application.java:447)
+	at com.sun.glass.ui.Screen.setEventHandler(Screen.java:367)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.setScreenConfigurationListener(QuantumToolkit.java:724)
+	at javafx.stage.Screen.<clinit>(Screen.java:74)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1166)
+	(internal stack frames of the image generator are omitted)
+
+
+Caused by: java.lang.ExceptionInInitializerError
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1166)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.ensureClassInitialized(ClassInitializationSupport.java:200)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.computeInitKindAndMaybeInitializeClass(ClassInitializationSupport.java:434)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.computeInitKindAndMaybeInitializeClass(ClassInitializationSupport.java:372)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.maybeInitializeAtBuildTime(ClassInitializationSupport.java:184)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.maybeInitializeAtBuildTime(ClassInitializationSupport.java:173)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.SVMHost.isInitialized(SVMHost.java:424)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisType.isInitialized(AnalysisType.java:954)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.maybeEagerlyInitialize(BytecodeParser.java:4818)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.genInvokeStatic(BytecodeParser.java:1867)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.genInvokeStatic(BytecodeParser.java:1860)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.processBytecode(BytecodeParser.java:5857)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.iterateBytecodesForBlock(BytecodeParser.java:3819)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.phases.SharedGraphBuilderPhase$SharedBytecodeParser.iterateBytecodesForBlock(SharedGraphBuilderPhase.java:938)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.handleBytecodeBlock(BytecodeParser.java:3779)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.processBlock(BytecodeParser.java:3626)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.build(BytecodeParser.java:1179)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.phases.SharedGraphBuilderPhase$SharedBytecodeParser.build(SharedGraphBuilderPhase.java:204)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.buildRootMethod(BytecodeParser.java:1071)
+	at jdk.graal.compiler/jdk.graal.compiler.java.GraphBuilderPhase$Instance.run(GraphBuilderPhase.java:103)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.phases.SharedGraphBuilderPhase.run(SharedGraphBuilderPhase.java:156)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.Phase.run(Phase.java:49)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.BasePhase.apply(BasePhase.java:468)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.Phase.apply(Phase.java:42)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.Phase.apply(Phase.java:38)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.AnalysisParsedGraph.parseBytecode(AnalysisParsedGraph.java:144)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.lambda$parseGraph$0(AnalysisMethod.java:1007)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.setGraph(AnalysisMethod.java:1023)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.parseGraph(AnalysisMethod.java:1007)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.ensureGraphParsedHelper(AnalysisMethod.java:979)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.ensureGraphParsed(AnalysisMethod.java:958)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.phases.InlineBeforeAnalysisGraphDecoder.lookupEncodedGraph(InlineBeforeAnalysisGraphDecoder.java:181)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.doInline(PEGraphDecoder.java:1215)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.tryInline(PEGraphDecoder.java:1198)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.trySimplifyInvoke(PEGraphDecoder.java:1053)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.handleInvokeWithCallTarget(PEGraphDecoder.java:1005)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.handleInvoke(PEGraphDecoder.java:991)
+	at jdk.graal.compiler/jdk.graal.compiler.nodes.GraphDecoder.processNextNode(GraphDecoder.java:926)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.phases.InlineBeforeAnalysisGraphDecoder.processNextNode(InlineBeforeAnalysisGraphDecoder.java:269)
+	at jdk.graal.compiler/jdk.graal.compiler.nodes.GraphDecoder.decode(GraphDecoder.java:654)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.decode(PEGraphDecoder.java:895)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.phases.InlineBeforeAnalysis.decodeGraph(InlineBeforeAnalysis.java:73)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlowBuilder.parse(MethodTypeFlowBuilder.java:239)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlowBuilder.apply(MethodTypeFlowBuilder.java:715)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlow.createFlowsGraph(MethodTypeFlow.java:167)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlow.ensureFlowsGraphCreated(MethodTypeFlow.java:152)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlow.getOrCreateMethodFlowsGraphInfo(MethodTypeFlow.java:110)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.typestate.DefaultStaticInvokeTypeFlow.lambda$update$0(DefaultStaticInvokeTypeFlow.java:81)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.util.LightImmutableCollection.forEach(LightImmutableCollection.java:90)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.typestate.DefaultStaticInvokeTypeFlow.update(DefaultStaticInvokeTypeFlow.java:80)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.typestate.DefaultStaticInvokeTypeFlow.lambda$onFlowEnabled$0(DefaultStaticInvokeTypeFlow.java:60)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.AbstractAnalysisEngine$1.run(AbstractAnalysisEngine.java:341)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.util.CompletionExecutor.executeCommand(CompletionExecutor.java:166)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.util.CompletionExecutor.lambda$executeService$0(CompletionExecutor.java:152)
+	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.compute(ForkJoinTask.java:1735)
+	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.compute(ForkJoinTask.java:1726)
+	at java.base/java.util.concurrent.ForkJoinTask$InterruptibleTask.exec(ForkJoinTask.java:1650)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:507)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1394)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1970)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:187)
+Caused by: java.lang.IllegalStateException: This operation is permitted on the event thread only; currentThread = ForkJoinPool.commonPool-worker-3
+	at com.sun.glass.ui.Application.checkEventThread(Application.java:447)
+	at com.sun.glass.ui.Screen.setEventHandler(Screen.java:367)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.setScreenConfigurationListener(QuantumToolkit.java:724)
+	at javafx.stage.Screen.<clinit>(Screen.java:74)
+	... 62 more
+Caused by: java.lang.IllegalStateException: This operation is permitted on the event thread only; currentThread = ForkJoinPool.commonPool-worker-3
+	at com.sun.glass.ui.Application.checkEventThread(Application.java:447)
+	at com.sun.glass.ui.Screen.setEventHandler(Screen.java:367)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.setScreenConfigurationListener(QuantumToolkit.java:724)
+	at javafx.stage.Screen.<clinit>(Screen.java:74)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1166)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.ensureClassInitialized(ClassInitializationSupport.java:200)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.computeInitKindAndMaybeInitializeClass(ClassInitializationSupport.java:434)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.computeInitKindAndMaybeInitializeClass(ClassInitializationSupport.java:372)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.maybeInitializeAtBuildTime(ClassInitializationSupport.java:184)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.maybeInitializeAtBuildTime(ClassInitializationSupport.java:173)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.SVMHost.isInitialized(SVMHost.java:424)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisType.isInitialized(AnalysisType.java:954)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.maybeEagerlyInitialize(BytecodeParser.java:4818)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.genInvokeStatic(BytecodeParser.java:1867)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.genInvokeStatic(BytecodeParser.java:1860)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.processBytecode(BytecodeParser.java:5857)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.iterateBytecodesForBlock(BytecodeParser.java:3819)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.phases.SharedGraphBuilderPhase$SharedBytecodeParser.iterateBytecodesForBlock(SharedGraphBuilderPhase.java:938)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.handleBytecodeBlock(BytecodeParser.java:3779)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.processBlock(BytecodeParser.java:3626)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.build(BytecodeParser.java:1179)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.phases.SharedGraphBuilderPhase$SharedBytecodeParser.build(SharedGraphBuilderPhase.java:204)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.buildRootMethod(BytecodeParser.java:1071)
+	at jdk.graal.compiler/jdk.graal.compiler.java.GraphBuilderPhase$Instance.run(GraphBuilderPhase.java:103)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.phases.SharedGraphBuilderPhase.run(SharedGraphBuilderPhase.java:156)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.Phase.run(Phase.java:49)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.BasePhase.apply(BasePhase.java:468)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.Phase.apply(Phase.java:42)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.Phase.apply(Phase.java:38)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.AnalysisParsedGraph.parseBytecode(AnalysisParsedGraph.java:144)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.lambda$parseGraph$0(AnalysisMethod.java:1007)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.setGraph(AnalysisMethod.java:1023)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.parseGraph(AnalysisMethod.java:1007)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.ensureGraphParsedHelper(AnalysisMethod.java:979)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.ensureGraphParsed(AnalysisMethod.java:958)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.phases.InlineBeforeAnalysisGraphDecoder.lookupEncodedGraph(InlineBeforeAnalysisGraphDecoder.java:181)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.doInline(PEGraphDecoder.java:1215)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.tryInline(PEGraphDecoder.java:1198)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.trySimplifyInvoke(PEGraphDecoder.java:1053)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.handleInvokeWithCallTarget(PEGraphDecoder.java:1005)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.handleInvoke(PEGraphDecoder.java:991)
+	at jdk.graal.compiler/jdk.graal.compiler.nodes.GraphDecoder.processNextNode(GraphDecoder.java:926)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.phases.InlineBeforeAnalysisGraphDecoder.processNextNode(InlineBeforeAnalysisGraphDecoder.java:269)
+	at jdk.graal.compiler/jdk.graal.compiler.nodes.GraphDecoder.decode(GraphDecoder.java:654)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.decode(PEGraphDecoder.java:895)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.phases.InlineBeforeAnalysis.decodeGraph(InlineBeforeAnalysis.java:73)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlowBuilder.parse(MethodTypeFlowBuilder.java:239)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlowBuilder.apply(MethodTypeFlowBuilder.java:715)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlow.createFlowsGraph(MethodTypeFlow.java:167)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlow.ensureFlowsGraphCreated(MethodTypeFlow.java:152)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlow.getOrCreateMethodFlowsGraphInfo(MethodTypeFlow.java:110)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.typestate.DefaultStaticInvokeTypeFlow.lambda$update$0(DefaultStaticInvokeTypeFlow.java:81)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.util.LightImmutableCollection.forEach(LightImmutableCollection.java:90)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.typestate.DefaultStaticInvokeTypeFlow.update(DefaultStaticInvokeTypeFlow.java:80)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.typestate.DefaultStaticInvokeTypeFlow.lambda$onFlowEnabled$0(DefaultStaticInvokeTypeFlow.java:60)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.AbstractAnalysisEngine$1.run(AbstractAnalysisEngine.java:341)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.util.CompletionExecutor.executeCommand(CompletionExecutor.java:166)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.util.CompletionExecutor.lambda$executeService$0(CompletionExecutor.java:152)
+	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.compute(ForkJoinTask.java:1735)
+	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.compute(ForkJoinTask.java:1726)
+	at java.base/java.util.concurrent.ForkJoinTask$InterruptibleTask.exec(ForkJoinTask.java:1650)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:507)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1394)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1970)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:187)
+Internal exception: com.oracle.svm.core.util.UserError$UserException: Class initialization of javafx.stage.Screen failed. Use the option 
+
+    '--initialize-at-run-time=javafx.stage.Screen'
+
+ to explicitly request initialization of this class at run time. Exception thrown by the class initializer:
+
+java.lang.IllegalStateException: This operation is permitted on the event thread only; currentThread = ForkJoinPool.commonPool-worker-3
+	at com.sun.glass.ui.Application.checkEventThread(Application.java:447)
+	at com.sun.glass.ui.Screen.setEventHandler(Screen.java:367)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.setScreenConfigurationListener(QuantumToolkit.java:724)
+	at javafx.stage.Screen.<clinit>(Screen.java:74)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1166)
+	(internal stack frames of the image generator are omitted)
+
+
+	at org.graalvm.nativeimage.builder/com.oracle.svm.core.util.UserError.abort(UserError.java:97)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.ensureClassInitialized(ClassInitializationSupport.java:235)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.computeInitKindAndMaybeInitializeClass(ClassInitializationSupport.java:434)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.computeInitKindAndMaybeInitializeClass(ClassInitializationSupport.java:372)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.maybeInitializeAtBuildTime(ClassInitializationSupport.java:184)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.maybeInitializeAtBuildTime(ClassInitializationSupport.java:173)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.SVMHost.isInitialized(SVMHost.java:424)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisType.isInitialized(AnalysisType.java:954)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.maybeEagerlyInitialize(BytecodeParser.java:4818)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.genInvokeStatic(BytecodeParser.java:1867)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.genInvokeStatic(BytecodeParser.java:1860)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.processBytecode(BytecodeParser.java:5857)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.iterateBytecodesForBlock(BytecodeParser.java:3819)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.phases.SharedGraphBuilderPhase$SharedBytecodeParser.iterateBytecodesForBlock(SharedGraphBuilderPhase.java:938)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.handleBytecodeBlock(BytecodeParser.java:3779)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.processBlock(BytecodeParser.java:3626)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.build(BytecodeParser.java:1179)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.phases.SharedGraphBuilderPhase$SharedBytecodeParser.build(SharedGraphBuilderPhase.java:204)
+	at jdk.graal.compiler/jdk.graal.compiler.java.BytecodeParser.buildRootMethod(BytecodeParser.java:1071)
+	at jdk.graal.compiler/jdk.graal.compiler.java.GraphBuilderPhase$Instance.run(GraphBuilderPhase.java:103)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.phases.SharedGraphBuilderPhase.run(SharedGraphBuilderPhase.java:156)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.Phase.run(Phase.java:49)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.BasePhase.apply(BasePhase.java:468)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.Phase.apply(Phase.java:42)
+	at jdk.graal.compiler/jdk.graal.compiler.phases.Phase.apply(Phase.java:38)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.AnalysisParsedGraph.parseBytecode(AnalysisParsedGraph.java:144)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.lambda$parseGraph$0(AnalysisMethod.java:1007)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.setGraph(AnalysisMethod.java:1023)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.parseGraph(AnalysisMethod.java:1007)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.ensureGraphParsedHelper(AnalysisMethod.java:979)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.meta.AnalysisMethod.ensureGraphParsed(AnalysisMethod.java:958)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.phases.InlineBeforeAnalysisGraphDecoder.lookupEncodedGraph(InlineBeforeAnalysisGraphDecoder.java:181)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.doInline(PEGraphDecoder.java:1215)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.tryInline(PEGraphDecoder.java:1198)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.trySimplifyInvoke(PEGraphDecoder.java:1053)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.handleInvokeWithCallTarget(PEGraphDecoder.java:1005)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.handleInvoke(PEGraphDecoder.java:991)
+	at jdk.graal.compiler/jdk.graal.compiler.nodes.GraphDecoder.processNextNode(GraphDecoder.java:926)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.phases.InlineBeforeAnalysisGraphDecoder.processNextNode(InlineBeforeAnalysisGraphDecoder.java:269)
+	at jdk.graal.compiler/jdk.graal.compiler.nodes.GraphDecoder.decode(GraphDecoder.java:654)
+	at jdk.graal.compiler/jdk.graal.compiler.replacements.PEGraphDecoder.decode(PEGraphDecoder.java:895)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.phases.InlineBeforeAnalysis.decodeGraph(InlineBeforeAnalysis.java:73)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlowBuilder.parse(MethodTypeFlowBuilder.java:239)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlowBuilder.apply(MethodTypeFlowBuilder.java:715)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlow.createFlowsGraph(MethodTypeFlow.java:167)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlow.ensureFlowsGraphCreated(MethodTypeFlow.java:152)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.flow.MethodTypeFlow.getOrCreateMethodFlowsGraphInfo(MethodTypeFlow.java:110)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.typestate.DefaultStaticInvokeTypeFlow.lambda$update$0(DefaultStaticInvokeTypeFlow.java:81)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.util.LightImmutableCollection.forEach(LightImmutableCollection.java:90)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.typestate.DefaultStaticInvokeTypeFlow.update(DefaultStaticInvokeTypeFlow.java:80)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.typestate.DefaultStaticInvokeTypeFlow.lambda$onFlowEnabled$0(DefaultStaticInvokeTypeFlow.java:60)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.AbstractAnalysisEngine$1.run(AbstractAnalysisEngine.java:341)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.util.CompletionExecutor.executeCommand(CompletionExecutor.java:166)
+	at org.graalvm.nativeimage.pointsto/com.oracle.graal.pointsto.util.CompletionExecutor.lambda$executeService$0(CompletionExecutor.java:152)
+	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.compute(ForkJoinTask.java:1735)
+	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.compute(ForkJoinTask.java:1726)
+	at java.base/java.util.concurrent.ForkJoinTask$InterruptibleTask.exec(ForkJoinTask.java:1650)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:507)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1394)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1970)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:187)
+Caused by: java.lang.ExceptionInInitializerError
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1166)
+	at org.graalvm.nativeimage.builder/com.oracle.svm.hosted.classinitialization.ClassInitializationSupport.ensureClassInitialized(ClassInitializationSupport.java:200)
+	... 59 more
+Caused by: java.lang.IllegalStateException: This operation is permitted on the event thread only; currentThread = ForkJoinPool.commonPool-worker-3
+	at com.sun.glass.ui.Application.checkEventThread(Application.java:447)
+	at com.sun.glass.ui.Screen.setEventHandler(Screen.java:367)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.setScreenConfigurationListener(QuantumToolkit.java:724)
+	at javafx.stage.Screen.<clinit>(Screen.java:74)
+	... 62 more
+------------------------------------------------------------------------------------------------------------------------
+                        0,6s (2,0% of total time) in 53 GCs | Peak RSS: 0,87GB | CPU load: 1,91
+========================================================================================================================
+Failed generating 'nbdsig' after 27,5s.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  34.743 s
+[INFO] Finished at: 2025-08-08T14:10:34+03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.graalvm.buildtools:native-maven-plugin:0.9.28:compile-no-fork (default) on project nbdsig: Execution of /Users/anatolijdyrul/Documents/Program Files/graalvm-jdk-24.0.2+11.1/Contents/Home/bin/native-image -cp /Users/anatolijdyrul/Documents/Projects/NBDsig/target/nbdsig-1.0-SNAPSHOT.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-controls/19.0.2.1/javafx-controls-19.0.2.1-win.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-controls/19.0.2.1/javafx-controls-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-graphics/19.0.2.1/javafx-graphics-19.0.2.1.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-graphics/19.0.2.1/javafx-graphics-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-base/19.0.2.1/javafx-base-19.0.2.1.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-base/19.0.2.1/javafx-base-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-fxml/19.0.2.1/javafx-fxml-19.0.2.1-win.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-fxml/19.0.2.1/javafx-fxml-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-controls/19.0.2.1/javafx-controls-19.0.2.1.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-swing/19.0.2.1/javafx-swing-19.0.2.1.jar:/Users/anatolijdyrul/.m2/repository/org/openjfx/javafx-swing/19.0.2.1/javafx-swing-19.0.2.1-mac.jar:/Users/anatolijdyrul/.m2/repository/org/apache/pdfbox/pdfbox/2.0.29/pdfbox-2.0.29.jar:/Users/anatolijdyrul/.m2/repository/org/apache/pdfbox/fontbox/2.0.29/fontbox-2.0.29.jar:/Users/anatolijdyrul/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/anatolijdyrul/.m2/repository/org/apache/pdfbox/pdfbox-tools/2.0.29/pdfbox-tools-2.0.29.jar:/Users/anatolijdyrul/.m2/repository/org/apache/pdfbox/pdfbox-debugger/2.0.29/pdfbox-debugger-2.0.29.jar:/Users/anatolijdyrul/.m2/repository/org/bouncycastle/bcprov-jdk15on/1.70/bcprov-jdk15on-1.70.jar:/Users/anatolijdyrul/.m2/repository/org/bouncycastle/bcpkix-jdk15on/1.70/bcpkix-jdk15on-1.70.jar:/Users/anatolijdyrul/.m2/repository/org/bouncycastle/bcmail-jdk15on/1.70/bcmail-jdk15on-1.70.jar:/Users/anatolijdyrul/.m2/repository/org/bouncycastle/bcutil-jdk15on/1.70/bcutil-jdk15on-1.70.jar --no-fallback -o /Users/anatolijdyrul/Documents/Projects/NBDsig/target/nbdsig --no-fallback -H:+ReportExceptionStackTraces --initialize-at-build-time=org.bouncycastle,org.apache.pdfbox,javafx -H:+AddAllCharsets -H:IncludeResources=.*\.(fxml|css|png)$ com.example.Launcher returned non-zero result -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

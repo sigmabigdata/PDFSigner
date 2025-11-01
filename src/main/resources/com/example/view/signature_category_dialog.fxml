@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:id="dialogContainer" fx:controller="com.example.controller.SignatureCategoryDialogController"
+      spacing="10" styleClass="dialog-container">
+    <Label text="К какой категории относится подпись?" styleClass="dialog-title"/>
+    <Label fx:id="ownerLabel" wrapText="true" styleClass="owner-label"/>
+</VBox>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.controller.MainController"
+      styleClass="main-container"
+      spacing="20">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Заголовок -->
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <FontAwesomeIconView glyphName="FILE_PDF_ALT" styleClass="icon" size="28" style="-fx-fill: white;"/>
+        <Label text="PDF Signer Pro" styleClass="title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Новый документ" onAction="#handleNewDocument" styleClass="button">
+            <graphic>
+                <FontAwesomeIconView glyphName="FILE" styleClass="icon"/>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <!-- Основной контент -->
+    <VBox fx:id="mainContainer" styleClass="card" spacing="20">
+
+        <!-- Панель выбора типа документа -->
+        <VBox spacing="10">
+            <Label text="Тип документа" styleClass="subtitle"/>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <ComboBox fx:id="docTypeComboBox" prefWidth="300"/>
+                <Button text="Выбрать файлы" onAction="#handleSelectFiles" styleClass="button">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="FOLDER_OPEN" styleClass="icon"/>
+                    </graphic>
+                </Button>
+            </HBox>
+        </VBox>
+
+        <!-- Панель инструментов -->
+        <HBox spacing="10" styleClass="toolbar">
+            <Button text="Добавить подпись сотрудника" onAction="#handleAddEmployeeSignature" styleClass="button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="PENCIL" styleClass="icon"/>
+                </graphic>
+            </Button>
+            <Button text="Добавить доверенность" onAction="#handleAddProxy" styleClass="button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="FILE_TEXT" styleClass="icon"/>
+                </graphic>
+            </Button>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Подписать документ" onAction="#handleSign" styleClass="button button-success">
+                <graphic>
+                    <FontAwesomeIconView glyphName="CHECK" styleClass="icon"/>
+                </graphic>
+            </Button>
+            <Button text="Создать протокол" onAction="#handleCreateProtocol" styleClass="button button-warning">
+                <graphic>
+                    <FontAwesomeIconView glyphName="CLIPBOARD" styleClass="icon"/>
+                </graphic>
+            </Button>
+        </HBox>
+
+        <!-- Область статуса -->
+        <VBox spacing="10">
+            <Label text="Статус операции" styleClass="subtitle"/>
+            <TextArea fx:id="statusTextArea" prefRowCount="8" wrapText="true"/>
+        </VBox>
+
+    </VBox>
+
+    <!-- Статус бар -->
+    <HBox styleClass="status-bar" spacing="15" alignment="CENTER_LEFT">
+        <FontAwesomeIconView glyphName="INFO_CIRCLE" styleClass="icon"/>
+        <Label text="Готов к работе"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="PDF Signer v1.0" style="-fx-text-fill: #666;"/>
+    </HBox>
+
+</VBox>

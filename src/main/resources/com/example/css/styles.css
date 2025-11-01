@@ -1,0 +1,105 @@
+/* Основные стили приложения */
+.root {
+    -fx-font-family: "Segoe UI";
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #0077b6, #00b4d8, #90e0ef);
+}
+
+/* Стили для верхней панели с логотипом */
+.header-container {
+    -fx-alignment: center-right;
+    -fx-padding: 15;
+    -fx-background-color: transparent;
+}
+
+.bank-logo {
+    -fx-fit-width: 150;
+    -fx-fit-height: 60;
+    -fx-preserve-ratio: true;
+}
+
+/* Стили для основного контейнера */
+.main-container {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: rgba(255,255,255,0.7);
+    -fx-border-width: 1;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 20, 0, 0, 0);
+}
+
+/* Стили для кнопок */
+.action-button {
+    -fx-pref-width: 220px;
+    -fx-pref-height: 45px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0.2, 0, 2);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #4a90e2, #357bd8);
+    -fx-border-color: #2a5885;
+    -fx-border-width: 1;
+    -fx-padding: 8 10;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+.action-button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #3a7bc8, #2a6bb7);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0.3, 0, 3);
+}
+
+.action-button:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #2a6bb7, #1a5ba7);
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.4), 5, 0.5, 0, 1);
+}
+
+/* Стили для выпадающего списка */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #a0c0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 0);
+}
+
+.combo-box:hover {
+    -fx-border-color: #4a90e2;
+}
+
+/* Стили для текстовой области */
+.text-area {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-highlight-fill: #4a90e2;
+    -fx-highlight-text-fill: white;
+}
+
+.text-area .content {
+    -fx-background-color: rgba(255,255,255,0.9);
+    -fx-background-radius: 10;
+}
+
+/* Стили для меток */
+.label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #2a5885;
+    -fx-font-weight: bold;
+}
+
+/* Стили для сетки кнопок */
+.grid-pane {
+    -fx-hgap: 15;
+    -fx-vgap: 15;
+    -fx-alignment: center;
+}
+
+/* Стили для статусной панели */
+.status-pane {
+    -fx-padding: 10;
+}

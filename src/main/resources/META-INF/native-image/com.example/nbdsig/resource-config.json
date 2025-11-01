@@ -1,0 +1,11 @@
+[
+  {
+    "name": "javafx.application.Application",
+    "methods": [{"name": "launch", "parameterTypes": ["[Ljava.lang.String;"]}]
+  },
+  {
+    "name": "javafx.stage.Stage",
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true
+  }
+]
