@@ -80,13 +80,6 @@
             <version>1.2</version>
         </dependency>
 
-        <!-- Material Design для JavaFX -->
-        <dependency>
-            <groupId>io.github.palexdev</groupId>
-            <artifactId>materialfx</artifactId>
-            <version>11.15.0</version>
-        </dependency>
-
         <!-- Иконки -->
         <dependency>
             <groupId>de.jensd</groupId>
@@ -94,7 +87,7 @@
             <version>4.7.0-9.1.2</version>
         </dependency>
 
-        <!-- Современные контролы -->
+        <!-- ControlsFX -->
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
@@ -112,6 +105,16 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
+                </configuration>
+            </plugin>
+
+            <!-- JavaFX Maven Plugin -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>com.example.Launcher</mainClass>
                 </configuration>
             </plugin>
 

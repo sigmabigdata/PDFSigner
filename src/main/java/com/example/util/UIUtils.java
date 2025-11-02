@@ -16,24 +16,39 @@ import java.util.Optional;
 
 public class UIUtils {
     public static void showErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Ошибка");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        showStyledAlert(Alert.AlertType.ERROR, "Ошибка", null, message);
     }
 
     public static void showSuccessAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Успех");
-        alert.setHeaderText(null);
+        showStyledAlert(Alert.AlertType.INFORMATION, "Успех", null, message);
+    }
+
+    public static void showWarningAlert(String message) {
+        showStyledAlert(Alert.AlertType.WARNING, "Предупреждение", null, message);
+    }
+
+    private static void showStyledAlert(Alert.AlertType type, String title, String header, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
         alert.setContentText(message);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(UIUtils.class.getResource("/com/example/css/styles.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
+
         alert.showAndWait();
     }
 
     public static Optional<ProtocolData> showProtocolInputDialog(String defaultDocType, List<String> signers) {
         Dialog<ProtocolData> dialog = new Dialog<>();
         dialog.setTitle("Данные для протокола проверки");
+        dialog.setHeaderText("Введите данные протокола");
+
+        // Стилизация диалога
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getStylesheets().add(UIUtils.class.getResource("/com/example/css/styles.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
 
         // Создаем элементы формы
         TextField docTypeField = new TextField(defaultDocType);
@@ -42,15 +57,24 @@ public class UIUtils {
         TextField verificationDateField = new TextField(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         TextField employeeNameField = new TextField();
 
+        // Применяем стили к полям ввода
+        docTypeField.getStyleClass().add("modern-text-field");
+        docNumberField.getStyleClass().add("modern-text-field");
+        docDateField.getStyleClass().add("modern-text-field");
+        verificationDateField.getStyleClass().add("modern-text-field");
+        employeeNameField.getStyleClass().add("modern-text-field");
+
         // Список для отображения подписантов
         ListView<String> signersList = new ListView<>();
         signersList.getItems().addAll(signers);
-        signersList.setPrefHeight(150);
+        signersList.setPrefHeight(120);
+        signersList.getStyleClass().add("list-view");
 
         GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setHgap(15);
+        grid.setVgap(12);
+        grid.setPadding(new Insets(20));
+        grid.getStyleClass().add("modern-grid");
 
         grid.add(new Label("Тип документа:"), 0, 0);
         grid.add(docTypeField, 1, 0);
@@ -68,28 +92,28 @@ public class UIUtils {
         dialog.getDialogPane().setContent(grid);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        // Валидация
+        // Стилизация кнопок
         Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.getStyleClass().add("modern-button");
+        Node cancelButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButton.getStyleClass().add("secondary-button");
+
+        // Валидация
+        okButton.setDisable(true);
         docNumberField.textProperty().addListener((obs, oldVal, newVal) -> {
-            okButton.setDisable(newVal.trim().isEmpty() ||
-                    employeeNameField.getText().trim().isEmpty() ||
-                    docTypeField.getText().trim().isEmpty());
+            updateOkButton(okButton, docNumberField, employeeNameField, docTypeField);
         });
         employeeNameField.textProperty().addListener((obs, oldVal, newVal) -> {
-            okButton.setDisable(newVal.trim().isEmpty() ||
-                    docNumberField.getText().trim().isEmpty() ||
-                    docTypeField.getText().trim().isEmpty());
+            updateOkButton(okButton, docNumberField, employeeNameField, docTypeField);
         });
         docTypeField.textProperty().addListener((obs, oldVal, newVal) -> {
-            okButton.setDisable(newVal.trim().isEmpty() ||
-                    docNumberField.getText().trim().isEmpty() ||
-                    employeeNameField.getText().trim().isEmpty());
+            updateOkButton(okButton, docNumberField, employeeNameField, docTypeField);
         });
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
                 return new ProtocolData(
-                        docTypeField.getText(), // Используем введенное пользователем значение
+                        docTypeField.getText(),
                         docNumberField.getText(),
                         docDateField.getText(),
                         verificationDateField.getText(),
@@ -103,20 +127,38 @@ public class UIUtils {
         return dialog.showAndWait();
     }
 
+    private static void updateOkButton(Node okButton, TextField docNumberField,
+                                       TextField employeeNameField, TextField docTypeField) {
+        boolean isValid = !docNumberField.getText().trim().isEmpty() &&
+                !employeeNameField.getText().trim().isEmpty() &&
+                !docTypeField.getText().trim().isEmpty();
+        okButton.setDisable(!isValid);
+    }
+
     public static Optional<ProtocolSettings> showProtocolSettingsDialog() {
         Dialog<ProtocolSettings> dialog = new Dialog<>();
         dialog.setTitle("Настройки протокола");
+        dialog.setHeaderText("Настройки создания протокола");
+
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getStylesheets().add(UIUtils.class.getResource("/com/example/css/styles.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
 
         CheckBox blankPageCheckBox = new CheckBox("Добавить пустой лист для дополнительной информации");
+        blankPageCheckBox.getStyleClass().add("check-box");
 
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-        grid.add(blankPageCheckBox, 0, 0);
+        VBox content = new VBox(15);
+        content.setPadding(new Insets(20));
+        content.getChildren().add(blankPageCheckBox);
 
-        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        // Стилизация кнопок
+        Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.getStyleClass().add("modern-button");
+        Node cancelButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButton.getStyleClass().add("secondary-button");
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
@@ -128,24 +170,6 @@ public class UIUtils {
         return dialog.showAndWait();
     }
 
-    public static Optional<Boolean> showBlankPageConfirmation() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Добавление страницы");
-        alert.setHeaderText("Добавить пустую страницу?");
-        alert.setContentText("Хотите добавить пустую страницу для размещения дополнительной информации?");
-
-        ButtonType yesButton = new ButtonType("Да", ButtonBar.ButtonData.YES);
-        ButtonType noButton = new ButtonType("Нет", ButtonBar.ButtonData.NO);
-        alert.getButtonTypes().setAll(yesButton, noButton);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == yesButton) {
-            return Optional.of(true);
-        } else {
-            return Optional.of(false);
-        }
-    }
-
     public static Optional<String> showPagesInputDialog(File pdfFile) throws IOException {
         TextInputDialog dialog = new TextInputDialog("-1");
         dialog.setTitle("Ввод страниц");
@@ -153,14 +177,11 @@ public class UIUtils {
                         + "Примеры: '1,3,5' или '1-3,5'",
                 PDFSigner.getPageCount(pdfFile)));
         dialog.setContentText("Номера страниц:");
-        return dialog.showAndWait();
-    }
 
-    public static void showInformationAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getStylesheets().add(UIUtils.class.getResource("/com/example/css/styles.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
+
+        return dialog.showAndWait();
     }
 }

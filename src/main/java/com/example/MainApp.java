@@ -6,111 +6,94 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.Glow;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class MainApp extends Application {
 
+    private Stage primaryStage;
+    private StackPane loadingRoot;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Показываем загрузочный экран
-        showLoadingScreen(primaryStage);
+        this.primaryStage = primaryStage;
+
+        // Показываем неоновый загрузочный экран
+        showNeonLoadingScreen();
 
         // Загружаем основное приложение в фоне
-        loadMainApplication(primaryStage);
+        loadMainApplication();
     }
 
-    private void showLoadingScreen(Stage primaryStage) {
-        Parent loadingRoot = createLoadingScreen();
-        Scene loadingScene = new Scene(loadingRoot, 400, 300);
-        loadingScene.getStylesheets().add(getClass().getResource("/com/example/css/styles.css").toExternalForm());
+    private void showNeonLoadingScreen() {
+        loadingRoot = new StackPane();
+        loadingRoot.setStyle("-fx-background-color: #0F172A;");
 
+        // Создаем неоновые элементы
+        createNeonLoadingElements();
+
+        Scene loadingScene = new Scene(loadingRoot, 800, 600);
+        loadingScene.setFill(Color.TRANSPARENT);
+
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setScene(loadingScene);
-        primaryStage.setTitle("Загрузка...");
         primaryStage.centerOnScreen();
         primaryStage.show();
     }
 
-    private Parent createLoadingScreen() {
-        VBox root = new VBox();
-        root.setStyle("-fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%); " +
-                "-fx-alignment: center; -fx-spacing: 20; -fx-padding: 40;");
-
-        // Создаем спиннер
-        javafx.scene.shape.Circle spinner = new javafx.scene.shape.Circle(40);
-        spinner.setStroke(Color.WHITE);
-        spinner.setStrokeWidth(4);
+    private void createNeonLoadingElements() {
+        // Неоновый спиннер
+        Circle spinner = new Circle(50);
         spinner.setFill(Color.TRANSPARENT);
+        spinner.setStroke(Color.web("#00D4FF"));
+        spinner.setStrokeWidth(3);
+        spinner.setEffect(new Glow(0.8));
 
-        // Создаем метку загрузки (используем javafx.scene.control.Label)
-        Label loadingLabel = new Label("PDF Signer Pro\nЗагрузка...");
-        loadingLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-alignment: center;");
-        loadingLabel.setWrapText(true);
+        // Текст загрузки
+        Text loadingText = new Text("PDF SIGNER PRO");
+        loadingText.setFont(Font.font("Orbitron", 36));
+        loadingText.setFill(Color.web("#00D4FF"));
+        loadingText.setEffect(new Glow(0.7));
 
-        root.getChildren().addAll(spinner, loadingLabel);
+        loadingRoot.getChildren().addAll(spinner, loadingText);
 
-        // Анимация спиннера
-        RotateTransition rotate = new RotateTransition(Duration.seconds(2), spinner);
+        // Анимация вращения спиннера
+        RotateTransition rotate = new RotateTransition(Duration.seconds(1.5), spinner);
         rotate.setByAngle(360);
         rotate.setCycleCount(Animation.INDEFINITE);
         rotate.play();
 
         // Анимация пульсации текста
-        FadeTransition pulse = new FadeTransition(Duration.seconds(1.5), loadingLabel);
-        pulse.setFromValue(0.7);
-        pulse.setToValue(1.0);
+        ScaleTransition pulse = new ScaleTransition(Duration.seconds(0.8), loadingText);
+        pulse.setFromX(1);
+        pulse.setFromY(1);
+        pulse.setToX(1.1);
+        pulse.setToY(1.1);
         pulse.setCycleCount(Animation.INDEFINITE);
         pulse.setAutoReverse(true);
         pulse.play();
-
-        return root;
     }
 
-    private void loadMainApplication(Stage primaryStage) {
+    private void loadMainApplication() {
         new Thread(() -> {
             try {
                 // Имитация загрузки
-                Thread.sleep(2000);
+                Thread.sleep(1500);
 
-                // Загрузка основного интерфейса
                 javafx.application.Platform.runLater(() -> {
                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/view/main.fxml"));
-                        Parent root = loader.load();
-
-                        MainController controller = loader.getController();
-                        controller.setPrimaryStage(primaryStage);
-
-                        Scene scene = new Scene(root);
-
-                        // Применяем кастомные стили
-                        scene.getStylesheets().add(getClass().getResource("/com/example/css/styles.css").toExternalForm());
-
-                        // Анимация перехода
-                        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.8), root);
-                        fadeTransition.setFromValue(0);
-                        fadeTransition.setToValue(1);
-
-                        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.8), root);
-                        translateTransition.setFromY(30);
-                        translateTransition.setToY(0);
-
-                        ParallelTransition parallelTransition = new ParallelTransition(fadeTransition, translateTransition);
-
-                        primaryStage.setScene(scene);
-                        primaryStage.setTitle("PDF Signer Pro - Профессиональная система подписи документов");
-                        primaryStage.setMinWidth(1000);
-                        primaryStage.setMinHeight(750);
-                        primaryStage.centerOnScreen();
-
-                        parallelTransition.play();
-
+                        // Переход к основному приложению
+                        switchToMainApp();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        showErrorScreen(primaryStage, e.getMessage());
                     }
                 });
 
@@ -120,28 +103,39 @@ public class MainApp extends Application {
         }).start();
     }
 
-    private void showErrorScreen(Stage primaryStage, String errorMessage) {
-        VBox errorRoot = new VBox();
-        errorRoot.setStyle("-fx-background-color: #f8f9fa; -fx-alignment: center; -fx-spacing: 20; -fx-padding: 40;");
+    private void switchToMainApp() throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/view/main.fxml"));
+        Parent root = loader.load();
 
-        Label errorLabel = new Label("Ошибка загрузки приложения\n" + errorMessage);
-        errorLabel.setStyle("-fx-text-fill: #dc3545; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-alignment: center;");
-        errorLabel.setWrapText(true);
+        MainController controller = loader.getController();
+        controller.setPrimaryStage(primaryStage);
 
-        javafx.scene.control.Button retryButton = new javafx.scene.control.Button("Повторить");
-        retryButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;");
-        retryButton.setOnAction(e -> {
-            try {
-                start(primaryStage);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
+        Scene mainScene = new Scene(root);
+        mainScene.getStylesheets().add(getClass().getResource("/com/example/css/styles.css").toExternalForm());
+
+        // Эффект Bloom для всего приложения
+        root.setEffect(new Bloom(0.8));
+
+        // Анимация перехода
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), loadingRoot);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+
+        fadeOut.setOnFinished(e -> {
+            primaryStage.setScene(mainScene);
+            primaryStage.setTitle("PDF Signer Pro - Система электронной подписи");
+            primaryStage.setMinWidth(1000);
+            primaryStage.setMinHeight(700);
+            primaryStage.centerOnScreen();
+
+            // Анимация появления основного интерфейса
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), root);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
         });
 
-        errorRoot.getChildren().addAll(errorLabel, retryButton);
-
-        Scene errorScene = new Scene(errorRoot, 500, 300);
-        primaryStage.setScene(errorScene);
+        fadeOut.play();
     }
 
     public static void main(String[] args) {
