@@ -1,4 +1,4 @@
-/* Современная цветовая палитра */
+/* Современная цветовая палитра с неоновыми акцента */
 .root {
     -fx-primary: #6366F1;
     -fx-primary-dark: #4F46E5;
@@ -6,430 +6,422 @@
     -fx-secondary: #06D6A0;
     -fx-accent: #FF6B6B;
     -fx-warning: #FFD166;
-    -fx-dark: #0F172A;
-    -fx-darker: #020617;
+    -fx-neon-blue: #00D4FF;
+    -fx-neon-purple: #A855F7;
+    -fx-neon-green: #00FF88;
+    -fx-neon-pink: #FF0080;
+    -fx-dark: #0F0F1E;
+    -fx-darker: #070710;
     -fx-light: #F8FAFC;
-    -fx-surface: #1E293B;
-    -fx-card: rgba(30, 41, 59, 0.8);
+    -fx-surface: #1A1A2E;
 
     -fx-gradient-primary: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-    -fx-gradient-secondary: linear-gradient(135deg, #06D6A0 0%, #48BB78 100%);
-    -fx-gradient-dark: linear-gradient(165deg, #020617 0%, #0F172A 50%, #1E293B 100%);
-    -fx-gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    -fx-gradient-neon: linear-gradient(135deg, #00D4FF 0%, #A855F7 50%, #FF0080 100%);
+    -fx-gradient-matrix: linear-gradient(135deg, #00FF88 0%, #00D4FF 50%, #A855F7 100%);
+    -fx-gradient-cyber: linear-gradient(135deg, #FF0080 0%, #FF6B6B 50%, #FFD166 100%);
 }
 
 /* Анимации */
+@keyframes glow {
+    0% { -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.6), 20, 0, 0, 0); }
+    50% { -fx-effect: dropshadow(gaussian, rgba(168, 85, 247, 0.8), 30, 0, 0, 0); }
+    100% { -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.6), 20, 0, 0, 0); }
+}
+
 @keyframes float {
     0% { -fx-translate-y: 0; }
-    50% { -fx-translate-y: -5; }
+    50% { -fx-translate-y: -5px; }
     100% { -fx-translate-y: 0; }
 }
 
-@keyframes glow {
-    0% { -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.4), 20, 0, 0, 0); }
-    50% { -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.8), 30, 0, 0, 0); }
-    100% { -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.4), 20, 0, 0, 0); }
+@keyframes pulse {
+    0% { -fx-scale-x: 1; -fx-scale-y: 1; }
+    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+    100% { -fx-scale-x: 1; -fx-scale-y: 1; }
 }
 
-/* Главный контейнер */
+@keyframes slideIn {
+    from { -fx-translate-x: -50px; -fx-opacity: 0; }
+    to { -fx-translate-x: 0; -fx-opacity: 1; }
+}
+
+@keyframes typewriter {
+    from { -fx-stroke-dasharray: 1000; -fx-stroke-dashoffset: 1000; }
+    to { -fx-stroke-dashoffset: 0; }
+}
+
+/* Главный контейнер с анимированным градиентом */
 .main-container {
-    -fx-background-color: -fx-gradient-dark;
+    -fx-background-color:
+            linear-gradient(165deg, #070710 0%, #0F0F1E 50%, #1A1A2E 100%);
     -fx-padding: 0;
 }
 
-/* Стеклянные карточки */
-.glass-card {
-    -fx-background-color: -fx-gradient-glass;
-    -fx-background-radius: 20;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-width: 1;
-    -fx-border-radius: 20;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 25, 0, 0, 8);
+/* Анимированный градиентный бордер */
+.gradient-border {
+    -fx-border-width: 2px;
+    -fx-border-radius: 25px;
+    -fx-border-style: solid;
+    -fx-border-color: linear-gradient(45deg, #00D4FF, #A855F7, #FF0080, #00FF88);
+    -fx-background-color: rgba(26, 26, 46, 0.8);
+    -fx-background-radius: 23px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.3), 30, 0, 0, 10);
+}
+
+/* Неоновые карточки */
+.neon-card {
+    -fx-background-color:
+            linear-gradient(135deg,
+            rgba(255, 255, 255, 0.05) 0%,
+            rgba(255, 255, 255, 0.02) 100%);
+    -fx-background-radius: 20px;
+    -fx-border-color: rgba(0, 212, 255, 0.3);
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.2), 30, 0, 0, 5);
     -fx-background-insets: 0;
 }
 
-.glass-card:hover {
-    -fx-background-color: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
-    -fx-border-color: rgba(99, 102, 241, 0.3);
-    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.4), 35, 0, 0, 12);
-    -fx-translate-y: -2;
+.neon-card:hover {
+    -fx-border-color: rgba(0, 212, 255, 0.6);
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.4), 40, 0, 0, 10);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-translate-y: -3px;
 }
 
-/* Современные кнопки */
-.modern-button {
-    -fx-background-color: -fx-gradient-primary;
-    -fx-background-radius: 25;
+/* Голографические кнопки */
+.holographic-button {
+    -fx-background-color:
+            linear-gradient(135deg,
+            rgba(0, 212, 255, 0.1) 0%,
+            rgba(168, 85, 247, 0.1) 50%,
+            rgba(255, 0, 128, 0.1) 100%);
+    -fx-background-radius: 25px;
     -fx-text-fill: white;
-    -fx-font-weight: 700;
-    -fx-font-size: 14;
-    -fx-padding: 16 28;
-    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.4), 20, 0, 0, 5);
+    -fx-font-weight: 800;
+    -fx-font-size: 14px;
+    -fx-padding: 18px 32px;
+    -fx-border-color: linear-gradient(45deg, #00D4FF, #A855F7);
+    -fx-border-width: 2px;
+    -fx-border-radius: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.4), 20, 0, 0, 5);
     -fx-cursor: hand;
-    -fx-border-color: transparent;
-    -fx-border-radius: 25;
+    -fx-letter-spacing: 1px;
 }
 
-.modern-button:hover {
-    -fx-background-color: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
-    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.6), 25, 0, 0, 8);
+.holographic-button:hover {
+    -fx-background-color:
+            linear-gradient(135deg,
+            rgba(0, 212, 255, 0.2) 0%,
+            rgba(168, 85, 247, 0.2) 50%,
+            rgba(255, 0, 128, 0.2) 100%);
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.8), 30, 0, 0, 10);
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+    -fx-border-color: linear-gradient(45deg, #00FF88, #00D4FF);
+}
+
+.holographic-button:pressed {
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.2), 10, 0, 0, 2);
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* Матричные кнопки */
+.matrix-button {
+    -fx-background-color: rgba(0, 255, 136, 0.1);
+    -fx-background-radius: 20px;
+    -fx-text-fill: #00FF88;
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+    -fx-padding: 16px 28px;
+    -fx-border-color: #00FF88;
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 136, 0.6), 15, 0, 0, 0);
+    -fx-cursor: hand;
+    -fx-font-family: 'Courier New', monospace;
+}
+
+.matrix-button:hover {
+    -fx-background-color: rgba(0, 255, 136, 0.2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 136, 0.9), 25, 0, 0, 0);
+    -fx-text-fill: white;
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-.modern-button:pressed {
-    -fx-background-color: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%);
-    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.3), 15, 0, 0, 3);
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
-/* Вторичные кнопки */
-.secondary-button {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-background-radius: 25;
-    -fx-text-fill: white;
-    -fx-font-weight: 600;
-    -fx-font-size: 14;
-    -fx-padding: 14 26;
-    -fx-border-color: rgba(255, 255, 255, 0.2);
-    -fx-border-width: 1;
-    -fx-border-radius: 25;
+/* Кибеппанк кнопки */
+.cyber-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FF0080;
+    -fx-font-weight: 900;
+    -fx-font-size: 14px;
+    -fx-padding: 16px 30px;
+    -fx-border-color: #FF0080;
+    -fx-border-width: 2px;
+    -fx-border-radius: 0px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 128, 0.7), 20, 0, 0, 0);
     -fx-cursor: hand;
+    -fx-font-family: 'Orbitron', sans-serif;
+    -fx-letter-spacing: 2px;
 }
 
-.secondary-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.15);
-    -fx-border-color: rgba(99, 102, 241, 0.5);
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
-}
-
-/* Кнопки успеха */
-.success-button {
-    -fx-background-color: -fx-gradient-secondary;
-    -fx-effect: dropshadow(gaussian, rgba(6, 214, 160, 0.4), 20, 0, 0, 5);
-}
-
-.success-button:hover {
-    -fx-background-color: linear-gradient(135deg, #059669 0%, #38A169 100%);
-}
-
-/* Современные комбобоксы */
-.modern-combo {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-background-radius: 12;
-    -fx-border-color: rgba(255, 255, 255, 0.2);
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
-    -fx-padding: 12 16;
-    -fx-font-size: 14;
+.cyber-button:hover {
+    -fx-background-color: rgba(255, 0, 128, 0.1);
     -fx-text-fill: white;
-    -fx-font-weight: 500;
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 128, 1), 30, 0, 0, 0);
+    -fx-border-color: #FF6B6B;
 }
 
-.modern-combo:hover {
-    -fx-border-color: rgba(99, 102, 241, 0.5);
-}
-
-.modern-combo .list-cell {
-    -fx-background-color: #1E293B;
+/* Анимированные градиентные кнопки */
+.animated-gradient-button {
+    -fx-background-color: linear-gradient(45deg, #00D4FF, #A855F7, #FF0080);
+    -fx-background-size: 300% 300%;
+    -fx-background-radius: 25px;
     -fx-text-fill: white;
-    -fx-padding: 10 16;
-    -fx-border-color: transparent;
-}
-
-.modern-combo .list-cell:hover {
-    -fx-background-color: rgba(99, 102, 241, 0.1);
-    -fx-text-fill: #6366F1;
-}
-
-.modern-combo .list-view {
-    -fx-background-color: #1E293B;
-    -fx-background-radius: 12;
-    -fx-border-color: rgba(99, 102, 241, 0.3);
-    -fx-border-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 0, 5);
-}
-
-/* Стеклянная текстовая область */
-.glass-text-area {
-    -fx-background-color: rgba(255, 255, 255, 0.05);
-    -fx-background-radius: 15;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-radius: 15;
-    -fx-border-width: 1;
-    -fx-padding: 16;
-    -fx-font-size: 13;
-    -fx-text-fill: white;
-    -fx-font-family: 'SF Mono', 'Cascadia Code', monospace;
-}
-
-.glass-text-area .content {
-    -fx-background-color: transparent;
-    -fx-background-radius: 13;
-    -fx-text-fill: white;
-}
-
-.glass-text-area:focused {
-    -fx-border-color: rgba(99, 102, 241, 0.5);
-    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.2), 10, 0, 0, 0);
-}
-
-/* Современные заголовки */
-.modern-title {
-    -fx-font-size: 32;
     -fx-font-weight: 800;
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 2, 2);
+    -fx-font-size: 14px;
+    -fx-padding: 18px 32px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.5), 25, 0, 0, 8);
+    -fx-cursor: hand;
+    -fx-border-radius: 25px;
 }
 
-.modern-subtitle {
-    -fx-font-size: 18;
-    -fx-font-weight: 600;
-    -fx-text-fill: #94A3B8;
+.animated-gradient-button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(168, 85, 247, 0.7), 35, 0, 0, 12);
+    -fx-scale-x: 1.06;
+    -fx-scale-y: 1.06;
 }
 
-.modern-label {
-    -fx-font-size: 14;
-    -fx-font-weight: 600;
-    -fx-text-fill: #CBD5E1;
-}
-
-/* Статус бар */
-.modern-status-bar {
-    -fx-background-color: rgba(15, 23, 42, 0.9);
-    -fx-border-color: rgba(255, 255, 255, 0.05);
-    -fx-border-width: 1 0 0 0;
-    -fx-padding: 12 24;
-}
-
-/* Панель инструментов */
-.modern-toolbar {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-background-radius: 18;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-radius: 18;
-    -fx-border-width: 1;
-    -fx-padding: 20;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 15, 0, 0, 5);
-}
-
-/* Иконки */
-.modern-icon {
-    -fx-font-size: 16;
-    -fx-text-fill: #6366F1;
-}
-
-/* Диалоговые окна */
-.dialog-pane {
-    -fx-background-color: #1E293B;
-    -fx-border-color: rgba(99, 102, 241, 0.3);
-    -fx-border-width: 1;
-    -fx-border-radius: 15;
-    -fx-background-radius: 15;
-}
-
-.dialog-pane .button-bar .container {
-    -fx-background-color: transparent;
-}
-
-.dialog-pane .content {
-    -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-font-size: 14;
-}
-
-.dialog-pane .header-panel {
-    -fx-background-color: rgba(99, 102, 241, 0.1);
-    -fx-border-color: rgba(99, 102, 241, 0.2);
-    -fx-border-width: 0 0 1 0;
-}
-
-.dialog-pane .header-panel .label {
-    -fx-text-fill: white;
-    -fx-font-weight: 700;
-    -fx-font-size: 16;
-}
-
-/* Табы */
-.tab-pane {
-    -fx-background-color: transparent;
-    -fx-tab-min-height: 40;
-}
-
-.tab {
-    -fx-background-color: transparent;
-    -fx-background-radius: 10 10 0 0;
-    -fx-padding: 12 24;
-    -fx-text-fill: #94A3B8;
-    -fx-font-weight: 600;
-}
-
-.tab:selected {
-    -fx-background-color: #1E293B;
-    -fx-text-fill: #6366F1;
-    -fx-border-color: #6366F1;
-    -fx-border-width: 0 0 2 0;
-}
-
-.tab:hover {
-    -fx-background-color: rgba(99, 102, 241, 0.1);
-    -fx-text-fill: white;
-}
-
-/* Списки */
-.list-view {
+/* Неоновый комбобокс */
+.neon-combo {
     -fx-background-color: rgba(255, 255, 255, 0.05);
-    -fx-background-radius: 10;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-radius: 10;
+    -fx-background-radius: 15px;
+    -fx-border-color: rgba(0, 212, 255, 0.4);
+    -fx-border-radius: 15px;
+    -fx-border-width: 2px;
+    -fx-padding: 14px 20px;
+    -fx-font-size: 15px;
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.2), 10, 0, 0, 0);
 }
 
-.list-cell {
-    -fx-background-color: transparent;
+.neon-combo:hover {
+    -fx-border-color: rgba(0, 212, 255, 0.8);
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.4), 15, 0, 0, 0);
+}
+
+.neon-combo .list-cell {
+    -fx-background-color: #1A1A2E;
     -fx-text-fill: white;
-    -fx-padding: 12 16;
+    -fx-padding: 12px 20px;
     -fx-border-color: transparent;
 }
 
-.list-cell:filled:selected {
-    -fx-background-color: rgba(99, 102, 241, 0.2);
-    -fx-text-fill: #6366F1;
+.neon-combo .list-cell:hover {
+    -fx-background-color: rgba(0, 212, 255, 0.1);
+    -fx-text-fill: #00D4FF;
 }
 
-.list-cell:filled:hover {
-    -fx-background-color: rgba(99, 102, 241, 0.1);
+.neon-combo .list-view {
+    -fx-background-color: #1A1A2E;
+    -fx-background-radius: 15px;
+    -fx-border-color: rgba(0, 212, 255, 0.4);
+    -fx-border-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 20, 0, 0, 10);
 }
 
-/* Чекбоксы */
-.check-box {
-    -fx-text-fill: white;
-    -fx-font-weight: 500;
+/* Стеклянная текстовая область с неоновой подсветкой */
+.neon-text-area {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-background-radius: 20px;
+    -fx-border-color: rgba(0, 255, 136, 0.3);
+    -fx-border-radius: 20px;
+    -fx-border-width: 1px;
+    -fx-padding: 20px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #00FF88;
+    -fx-font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 136, 0.1), 10, 0, 0, 0);
 }
 
-.check-box .box {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-border-color: rgba(255, 255, 255, 0.3);
-    -fx-border-radius: 4;
-    -fx-background-radius: 4;
-}
-
-.check-box:selected .box {
-    -fx-background-color: #6366F1;
-    -fx-border-color: #6366F1;
-}
-
-/* Текстовые поля */
-.modern-text-field {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-background-radius: 10;
-    -fx-border-color: rgba(255, 255, 255, 0.2);
-    -fx-border-radius: 10;
-    -fx-border-width: 1;
-    -fx-padding: 12 16;
-    -fx-font-size: 14;
-    -fx-text-fill: white;
-}
-
-.modern-text-field:focused {
-    -fx-border-color: rgba(99, 102, 241, 0.6);
-    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.2), 5, 0, 0, 0);
-}
-
-/* Прогресс бар */
-.modern-progress {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-background-radius: 8;
-    -fx-padding: 2;
-}
-
-.modern-progress .bar {
-    -fx-background-color: -fx-gradient-primary;
-    -fx-background-radius: 6;
-    -fx-padding: 2;
-}
-
-/* Сетка */
-.modern-grid {
+.neon-text-area .content {
     -fx-background-color: transparent;
-    -fx-hgap: 20;
-    -fx-vgap: 15;
-    -fx-padding: 20;
+    -fx-background-radius: 18px;
+    -fx-text-fill: #00FF88;
 }
 
-/* Анимационные классы */
-.float-animation {
-    -fx-translate-y: 0;
+.neon-text-area:focused {
+    -fx-border-color: rgba(0, 255, 136, 0.8);
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 136, 0.3), 20, 0, 0, 5);
 }
 
-.glow-effect {
-    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.6), 25, 0, 0, 0);
+/* Футуристичные заголовки */
+.futuristic-title {
+    -fx-font-size: 42px;
+    -fx-font-weight: 900;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.5), 15, 0, 2, 2);
+    -fx-letter-spacing: 2px;
+    -fx-font-family: 'Orbitron', sans-serif;
 }
 
-/* Кастомные скроллбары */
+.cyber-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: 900;
+    -fx-text-fill: linear-gradient(to right, #00D4FF, #FF0080);
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 128, 0.5), 20, 0, 0, 0);
+    -fx-letter-spacing: 3px;
+    -fx-font-family: 'Orbitron', sans-serif;
+}
+
+.matrix-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #00FF88;
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 136, 0.7), 25, 0, 0, 0);
+    -fx-font-family: 'Courier New', monospace;
+    -fx-letter-spacing: 4px;
+}
+
+/* Анимированный статус бар */
+.animated-status-bar {
+    -fx-background-color: rgba(15, 15, 30, 0.9);
+    -fx-background-radius: 0 0 25px 25px;
+    -fx-border-color: linear-gradient(45deg, #00D4FF, #A855F7);
+    -fx-border-width: 0 0 2px 0;
+    -fx-padding: 15px 30px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.3), 20, 0, 0, -5);
+}
+
+/* Неоновые иконки */
+.neon-icon {
+    -fx-font-size: 20px;
+    -fx-text-fill: #00D4FF;
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.8), 10, 0, 0, 0);
+}
+
+.matrix-icon {
+    -fx-font-size: 18px;
+    -fx-text-fill: #00FF88;
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 136, 0.9), 15, 0, 0, 0);
+}
+
+.cyber-icon {
+    -fx-font-size: 19px;
+    -fx-text-fill: #FF0080;
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 128, 0.8), 12, 0, 0, 0);
+}
+
+/* Анимированная панель инструментов */
+.animated-toolbar {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 25px;
+    -fx-border-color: rgba(168, 85, 247, 0.3);
+    -fx-border-radius: 25px;
+    -fx-border-width: 1px;
+    -fx-padding: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(168, 85, 247, 0.2), 20, 0, 0, 5);
+}
+
+/* Кастомные скроллбары с неоном */
 .scroll-bar:vertical {
     -fx-background-color: transparent;
 }
 
 .scroll-bar:vertical .track {
     -fx-background-color: rgba(255, 255, 255, 0.05);
-    -fx-background-radius: 8;
+    -fx-background-radius: 10px;
 }
 
 .scroll-bar:vertical .thumb {
-    -fx-background-color: rgba(99, 102, 241, 0.5);
-    -fx-background-radius: 8;
+    -fx-background-color: linear-gradient(to bottom, #00D4FF, #A855F7);
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.6), 8, 0, 0, 0);
 }
 
 .scroll-bar:vertical .thumb:hover {
-    -fx-background-color: rgba(99, 102, 241, 0.7);
+    -fx-background-color: linear-gradient(to bottom, #00FF88, #00D4FF);
 }
 
-/* Анимации для элементов */
-@keyframes fadeInUp {
-    from {
-        -fx-opacity: 0;
-        -fx-translate-y: 20;
+/* Анимационные классы */
+.pulse-glow {
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.6), 30, 0, 0, 0);
+}
+
+.matrix-glow {
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 136, 0.8), 25, 0, 0, 0);
+}
+
+.cyber-glow {
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 128, 0.7), 20, 0, 0, 0);
+}
+
+.float-animation {
+    -fx-translate-y: 0;
+}
+
+.holographic-effect {
+    -fx-background-color:
+            linear-gradient(135deg,
+            rgba(0, 212, 255, 0.1) 0%,
+            rgba(168, 85, 247, 0.1) 50%,
+            rgba(255, 0, 128, 0.1) 100%);
+    -fx-border-color: linear-gradient(45deg, #00D4FF, #A855F7);
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.3), 20, 0, 0, 5);
+}
+
+/* Анимация ввода текста */
+.typing-animation {
+    -fx-stroke: #00FF88;
+    -fx-stroke-width: 2;
+    -fx-fill: transparent;
+    -fx-stroke-dasharray: 1000;
+    -fx-stroke-dashoffset: 1000;
+}
+
+/* Эффекты частиц */
+.particle-effect {
+    -fx-background-color: transparent;
+}
+
+/* Адаптивные медиа-запросы */
+@media (max-width: 1200px) {
+    .futuristic-title {
+        -fx-font-size: 36px;
     }
-    to {
-        -fx-opacity: 1;
-        -fx-translate-y: 0;
+
+    .cyber-title {
+        -fx-font-size: 30px;
+    }
+
+    .matrix-title {
+        -fx-font-size: 28px;
     }
 }
 
-@keyframes pulse {
-    0% {
-        -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.4), 10, 0, 0, 0);
-    }
-    50% {
-        -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.8), 15, 0, 0, 0);
-    }
-    100% {
-        -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.4), 10, 0, 0, 0);
-    }
+/* Специальные классы для анимаций */
+.animated-border {
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-border-color: linear-gradient(45deg, #00D4FF, #A855F7, #FF0080, #00FF88);
+    -fx-background-color: rgba(26, 26, 46, 0.9);
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.4), 25, 0, 0, 8);
 }
 
-@keyframes shake {
-    0%, 100% {
-        -fx-translate-x: 0;
-    }
-    25% {
-        -fx-translate-x: 8;
-    }
-    75% {
-        -fx-translate-x: -8;
-    }
+.glow-on-hover:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.8), 40, 0, 0, 15);
 }
 
-/* Классы для анимаций */
-.animate-fade-in-up {
-    -fx-opacity: 0;
-}
-
-.animate-pulse {
-    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.4), 10, 0, 0, 0);
-}
-
-.animate-shake {
-    -fx-translate-x: 0;
+.shimmer-effect {
+    -fx-background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            transparent 100%
+    );
+    -fx-background-size: 200% 100%;
 }

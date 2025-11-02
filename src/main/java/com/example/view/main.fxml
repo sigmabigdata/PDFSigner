@@ -11,52 +11,53 @@
       styleClass="main-container"
       spacing="0">
 
-    <!-- Верхняя панель -->
-    <HBox style="-fx-background-color: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-                 -fx-padding: 20 30; -fx-spacing: 15;"
+    <!-- Верхняя панель с градиентом -->
+    <HBox style="-fx-background-color: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #06D6A0 100%);
+                 -fx-padding: 30px 40px; -fx-spacing: 20;"
           alignment="CENTER_LEFT">
 
-        <HBox spacing="15" alignment="CENTER_LEFT">
-            <FontAwesomeIconView glyphName="FILE_PDF_ALT" styleClass="modern-icon" size="28"/>
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="FILE_PDF_ALT" styleClass="icon" size="36"
+                                 style="-fx-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5,0,2,2);"/>
             <VBox spacing="5">
-                <Label text="PDF Signer Pro" styleClass="modern-title"/>
-                <Label text="Профессиональная система электронной подписи" styleClass="modern-subtitle"/>
+                <Label text="PDF SIGNER PRO" styleClass="futuristic-title"/>
+                <Label text="Профессиональная система электронной подписи" styleClass="subtitle"/>
             </VBox>
         </HBox>
 
         <Region HBox.hgrow="ALWAYS"/>
 
-        <Button text="Новый документ" onAction="#handleNewDocument" styleClass="secondary-button">
+        <Button text="НОВЫЙ ДОКУМЕНТ" onAction="#handleNewDocument" styleClass="neomorphic-button">
             <graphic>
-                <FontAwesomeIconView glyphName="FILE" styleClass="modern-icon"/>
+                <FontAwesomeIconView glyphName="FILE_ALT" styleClass="icon"/>
             </graphic>
         </Button>
     </HBox>
 
     <!-- Основной контент -->
-    <VBox fx:id="mainContainer" style="-fx-padding: 30; -fx-spacing: 25;"
+    <VBox fx:id="mainContainer" style="-fx-padding: 40px; -fx-spacing: 30;"
           alignment="TOP_CENTER">
 
         <!-- Карточка выбора документа -->
         <VBox styleClass="glass-card" spacing="20" prefWidth="800">
             <padding>
-                <Insets top="25" right="30" bottom="25" left="30"/>
+                <Insets top="30" right="30" bottom="30" left="30"/>
             </padding>
 
-            <Label text="Выбор документа" styleClass="modern-title"/>
+            <Label text="📄 ВЫБОР ДОКУМЕНТА" styleClass="gradient-title"/>
 
             <HBox spacing="20" alignment="CENTER_LEFT">
                 <VBox spacing="10">
-                    <Label text="Тип документа" styleClass="modern-label"/>
+                    <Label text="Тип документа" styleClass="subtitle"/>
                     <ComboBox fx:id="docTypeComboBox" styleClass="modern-combo" prefWidth="350"/>
                 </VBox>
 
                 <VBox spacing="10">
-                    <Label text="Действия" styleClass="modern-label"/>
-                    <Button text="Выбрать файлы" onAction="#handleSelectFiles"
-                            styleClass="modern-button">
+                    <Label text="Действия" styleClass="subtitle"/>
+                    <Button text="📁 ВЫБРАТЬ ФАЙЛЫ" onAction="#handleSelectFiles"
+                            styleClass="gradient-button">
                         <graphic>
-                            <FontAwesomeIconView glyphName="FOLDER_OPEN" styleClass="modern-icon"/>
+                            <FontAwesomeIconView glyphName="FOLDER_OPEN" styleClass="icon"/>
                         </graphic>
                     </Button>
                 </VBox>
@@ -64,48 +65,52 @@
         </VBox>
 
         <!-- Панель инструментов -->
-        <HBox styleClass="modern-toolbar" spacing="12" alignment="CENTER">
-            <Button text="Добавить подпись сотрудника" onAction="#handleAddEmployeeSignature"
-                    styleClass="secondary-button"/>
-            <Button text="Добавить доверенность" onAction="#handleAddProxy"
-                    styleClass="secondary-button"/>
+        <HBox styleClass="glass-toolbar" spacing="15" alignment="CENTER">
+            <Button text="👤 ПОДПИСЬ СОТРУДНИКА" onAction="#handleAddEmployeeSignature"
+                    styleClass="neomorphic-button"/>
+            <Button text="📋 ДОВЕРЕННОСТЬ" onAction="#handleAddProxy"
+                    styleClass="neomorphic-button"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Подписать документ" onAction="#handleSign"
-                    styleClass="modern-button success-button"/>
-            <Button text="Создать протокол" onAction="#handleCreateProtocol"
-                    styleClass="modern-button"/>
+            <Button text="✅ ПОДПИСАТЬ" onAction="#handleSign"
+                    styleClass="gradient-button success-button"/>
+            <Button text="📊 ПРОТОКОЛ" onAction="#handleCreateProtocol"
+                    styleClass="gradient-button warning-button"/>
         </HBox>
 
         <!-- Область статуса -->
         <VBox styleClass="glass-card" spacing="15" prefWidth="800">
             <padding>
-                <Insets top="20" right="25" bottom="20" left="25"/>
+                <Insets top="25" right="25" bottom="25" left="25"/>
             </padding>
 
-            <HBox spacing="12" alignment="CENTER_LEFT">
-                <FontAwesomeIconView glyphName="TASKS" styleClass="modern-icon" size="18"/>
-                <Label text="Статус операций" styleClass="modern-subtitle"/>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <FontAwesomeIconView glyphName="TASKS" styleClass="icon-primary" size="20"/>
+                <Label text="СТАТУС ОПЕРАЦИЙ" styleClass="subtitle"
+                       style="-fx-font-size: 18px; -fx-text-fill: white;"/>
             </HBox>
 
             <TextArea fx:id="statusTextArea" styleClass="glass-text-area"
-                      prefRowCount="8" wrapText="true"/>
+                      prefRowCount="10" wrapText="true"/>
         </VBox>
 
     </VBox>
 
     <!-- Статус бар -->
-    <HBox styleClass="modern-status-bar" spacing="20" alignment="CENTER_LEFT">
+    <HBox styleClass="glass-status-bar" spacing="20" alignment="CENTER_LEFT">
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <FontAwesomeIconView glyphName="CIRCLE" size="8" style="-fx-fill: #06D6A0;"/>
-            <Label text="Система активна" styleClass="modern-label"/>
+            <FontAwesomeIconView glyphName="CIRCLE" size="8"
+                                 style="-fx-fill: #06D6A0; -fx-effect: dropshadow(gaussian, #06D6A0, 5,0,0,0);"/>
+            <Label text="Система активна" style="-fx-text-fill: #94A3B8; -fx-font-weight: 600;"/>
         </HBox>
 
         <Region HBox.hgrow="ALWAYS"/>
 
         <HBox spacing="15" alignment="CENTER_RIGHT">
-            <Label text="PDF Signer Pro v2.0" styleClass="modern-label"/>
-            <Label text="|" style="-fx-text-fill: #64748B;"/>
-            <Label text="ГОТОВ" style="-fx-text-fill: #06D6A0; -fx-font-weight: 700;"/>
+            <Label text="PDF SIGNER PRO v2.0"
+                   style="-fx-text-fill: #6366F1; -fx-font-weight: 800; -fx-font-size: 12px;"/>
+            <Label text="|" style="-fx-text-fill: #475569;"/>
+            <Label text="READY"
+                   style="-fx-text-fill: #06D6A0; -fx-font-weight: 900; -fx-font-size: 12px;"/>
         </HBox>
     </HBox>
 
