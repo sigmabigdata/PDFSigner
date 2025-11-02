@@ -4,26 +4,13 @@ import com.example.util.PDFAreaSelector;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import com.example.model.*;
 import com.example.util.PDFSigner;
 import com.example.util.UIUtils;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,8 +18,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javafx.animation.*;
-import javafx.scene.effect.Bloom;
-import javafx.scene.effect.Glow;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Control;
@@ -48,10 +33,40 @@ public class MainController {
     private File employeeSignatureFile;
     private List<File> pdfFiles = new ArrayList<>();
     private List<File> sigFiles = new ArrayList<>();
-    private File currentPdfFile;
+
+    // Для управления анимациями и предотвращения утечек памяти
+    private final List<Animation> activeAnimations = new ArrayList<>();
+    private Timeline processingAnimation;
 
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
+        setupWindowDragging();
+        setupCloseHandler();
+    }
+
+    private void setupWindowDragging() {
+        if (primaryStage != null) {
+            final double[] xOffset = new double[1];
+            final double[] yOffset = new double[1];
+
+            mainContainer.setOnMousePressed(event -> {
+                xOffset[0] = primaryStage.getX() - event.getScreenX();
+                yOffset[0] = primaryStage.getY() - event.getScreenY();
+            });
+
+            mainContainer.setOnMouseDragged(event -> {
+                primaryStage.setX(event.getScreenX() + xOffset[0]);
+                primaryStage.setY(event.getScreenY() + yOffset[0]);
+            });
+        }
+    }
+
+    private void setupCloseHandler() {
+        if (primaryStage != null) {
+            primaryStage.setOnCloseRequest(event -> {
+                shutdown();
+            });
+        }
     }
 
     @FXML
@@ -74,54 +89,48 @@ public class MainController {
 
         applyModernStyles();
 
-        // Начальное сообщение
         appendStatus("Система инициализирована", "УСПЕХ");
         appendStatus("Готов к работе", "ИНФО");
     }
 
     private void setupModernDesign() {
-        // Неоновое свечение для основного контейнера
-        Glow mainGlow = new Glow();
-        mainGlow.setLevel(0.2);
-        mainContainer.setEffect(mainGlow);
+        // Упрощенный дизайн без лишних эффектов
     }
 
     private void startFastEntranceAnimations() {
-        // Быстрая задержка для запуска анимаций
         Timeline delayTimeline = new Timeline(new KeyFrame(Duration.millis(50), e -> {
             animateFastEntrance();
         }));
         delayTimeline.play();
+        trackAnimation(delayTimeline);
     }
 
     private void animateFastEntrance() {
         ParallelTransition parallelTransition = new ParallelTransition();
 
-        // Собираем все элементы для анимации
         List<Node> animatedNodes = new ArrayList<>();
         collectAnimatableNodes(mainContainer, animatedNodes);
 
         for (int i = 0; i < animatedNodes.size(); i++) {
             Node node = animatedNodes.get(i);
             if (node.isVisible()) {
-                // Начальное состояние - невидимы и смещены
                 node.setOpacity(0);
                 node.setTranslateY(15);
 
-                // БЫСТРАЯ анимация появления - в 4 раза быстрее
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(100), node); // было 400
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(100), node);
                 fadeIn.setToValue(1);
-                fadeIn.setDelay(Duration.millis(i * 20)); // было 80
+                fadeIn.setDelay(Duration.millis(i * 20));
 
-                TranslateTransition slideIn = new TranslateTransition(Duration.millis(100), node); // было 400
+                TranslateTransition slideIn = new TranslateTransition(Duration.millis(100), node);
                 slideIn.setToY(0);
-                slideIn.setDelay(Duration.millis(i * 20)); // было 80
+                slideIn.setDelay(Duration.millis(i * 20));
 
                 parallelTransition.getChildren().addAll(fadeIn, slideIn);
             }
         }
 
         parallelTransition.play();
+        trackAnimation(parallelTransition);
     }
 
     private void collectAnimatableNodes(Parent parent, List<Node> nodes) {
@@ -149,13 +158,10 @@ public class MainController {
                 new FileChooser.ExtensionFilter("PNG изображения", "*.png")
         );
 
-        Window window = mainContainer.getScene().getWindow();
-        File selectedFile = fileChooser.showOpenDialog(window);
-
+        File selectedFile = fileChooser.showOpenDialog(getWindow());
         if (selectedFile != null) {
             employeeSignatureFile = selectedFile;
             appendStatus("Добавлено изображение подписи: " + selectedFile.getName(), "УСПЕХ");
-            playFastSuccessAnimation();
         }
     }
 
@@ -163,44 +169,50 @@ public class MainController {
     private void handleNewDocument() {
         playFastButtonAnimation();
 
+        // Очистка ресурсов
+        cleanupResources();
+
         pdfFiles.clear();
         sigFiles.clear();
-        currentPdfFile = null;
         proxyInfo = null;
         employeeSignatureFile = null;
         statusTextArea.clear();
         appendStatus("Готов к работе. Выберите файлы для нового документа.", "ИНФО");
-
-        playFastResetAnimation();
     }
 
     @FXML
     private void handleSelectFiles() {
         playFastButtonAnimation();
 
+        // Создаем FileChooser который позволяет выбирать все файлы
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Выберите PDF файл и файлы подписи (.sig)");
+        fileChooser.setTitle("Выберите PDF файлы и файлы подписи (.sig)");
+
+        // Устанавливаем фильтр который показывает все поддерживаемые файлы
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Все файлы", "*.*"),
+                new FileChooser.ExtensionFilter("Все поддерживаемые файлы", "*.pdf", "*.sig"),
                 new FileChooser.ExtensionFilter("PDF файлы", "*.pdf"),
-                new FileChooser.ExtensionFilter("SIG файлы", "*.sig")
+                new FileChooser.ExtensionFilter("SIG файлы", "*.sig"),
+                new FileChooser.ExtensionFilter("Все файлы", "*.*")
         );
 
-        Window window = mainContainer.getScene().getWindow();
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(window);
-
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(getWindow());
         if (selectedFiles != null && !selectedFiles.isEmpty()) {
-            processSelectedFilesWithFastAnimation(selectedFiles);
+            processSelectedFiles(selectedFiles);
         }
     }
 
-    private void processSelectedFilesWithFastAnimation(List<File> selectedFiles) {
+    private void processSelectedFiles(List<File> selectedFiles) {
+        // Отмена предыдущей анимации обработки если есть
+        if (processingAnimation != null) {
+            processingAnimation.stop();
+        }
+
         pdfFiles.clear();
         sigFiles.clear();
         statusTextArea.clear();
 
-        // БЫСТРАЯ анимация обработки файлов
-        Timeline processingAnimation = new Timeline(
+        processingAnimation = new Timeline(
                 new KeyFrame(Duration.millis(50), e -> {
                     appendStatus("Сканирование файлов...", "ИНФО");
                 }),
@@ -209,7 +221,6 @@ public class MainController {
                         String name = file.getName().toLowerCase();
                         if (name.endsWith(".pdf")) {
                             pdfFiles.add(file);
-                            currentPdfFile = file;
                             appendStatus("Выбран PDF файл: " + file.getName(), "УСПЕХ");
                         } else if (name.endsWith(".sig")) {
                             sigFiles.add(file);
@@ -222,18 +233,19 @@ public class MainController {
                         for (File sigFile : sigFiles) {
                             try {
                                 String signerInfo = PDFSigner.extractSignerInfo(sigFile);
-                                String ownerLine = signerInfo.split("\n")[signerInfo.split("\n").length - 1];
+                                String[] lines = signerInfo.split("\n");
+                                String ownerLine = lines.length > 0 ? lines[lines.length - 1] : "Неизвестно";
                                 appendStatus("  • " + sigFile.getName() + " (" + ownerLine + ")", "ИНФО");
                             } catch (Exception ex) {
                                 appendStatus("  • " + sigFile.getName() + " (не удалось прочитать информацию о подписи)", "ПРЕДУПРЕЖДЕНИЕ");
                             }
                         }
-                        playFastSuccessAnimation();
                     }
                 })
         );
 
         processingAnimation.play();
+        trackAnimation(processingAnimation);
     }
 
     @FXML
@@ -251,21 +263,16 @@ public class MainController {
                 new FileChooser.ExtensionFilter("XML файлы", "*.xml")
         );
 
-        Window window = getWindow();
-        if (window == null) return;
-
-        File proxyFile = fileChooser.showOpenDialog(window);
+        File proxyFile = fileChooser.showOpenDialog(getWindow());
         if (proxyFile != null) {
             try {
                 proxyInfo = parseProxyFile(proxyFile);
                 appendStatus("Добавлена доверенность:", "УСПЕХ");
                 appendStatus("  Номер: " + proxyInfo.getNumber(), "ИНФО");
                 appendStatus("  Срок действия: с " + proxyInfo.getIssueDate() + " по " + proxyInfo.getExpiryDate(), "ИНФО");
-                playFastSuccessAnimation();
             } catch (Exception e) {
                 showAlert("Ошибка", "Ошибка при чтении файла доверенности: " + e.getMessage());
                 appendStatus("Ошибка при чтении файла доверенности: " + e.getMessage(), "ОШИБКА");
-                playFastErrorAnimation();
             }
         }
     }
@@ -276,25 +283,22 @@ public class MainController {
 
         if (pdfFiles.isEmpty()) {
             showAlert("Ошибка", "Не выбран PDF файл!");
-            playFastErrorAnimation();
             return;
         }
 
         if (sigFiles.isEmpty()) {
             showAlert("Ошибка", "Не выбраны файлы подписей (.sig)!");
-            playFastErrorAnimation();
             return;
         }
 
         String docType = docTypeComboBox.getValue();
         if (docType == null) {
             showAlert("Ошибка", "Не выбран тип документа!");
-            playFastErrorAnimation();
             return;
         }
 
         try {
-            showFastProcessingAnimation();
+            showProcessingAnimation();
 
             String leftTitle = PDFSigner.getLeftColumnTitle(docType);
             String rightTitle = PDFSigner.getRightColumnTitle(docType);
@@ -305,13 +309,14 @@ public class MainController {
 
             if (signatureInfo.isEmpty()) {
                 showAlert("Ошибка", "Нет информации о подписях");
-                playFastErrorAnimation();
+                hideProcessingAnimation();
                 return;
             }
 
             File pdfFile = pdfFiles.get(0);
             Optional<String> pagesInput = UIUtils.showPagesInputDialog(pdfFile);
             if (!pagesInput.isPresent()) {
+                hideProcessingAnimation();
                 return;
             }
 
@@ -327,13 +332,10 @@ public class MainController {
             appendStatus("Штампы добавлены на страницы: " +
                     requestedPages.stream().map(String::valueOf).collect(Collectors.joining(", ")), "ИНФО");
 
-            playFastEpicSuccessAnimation();
-
         } catch (Exception e) {
             hideProcessingAnimation();
             showAlert("Ошибка", "Ошибка: " + e.getMessage());
             appendStatus("Ошибка: " + e.getMessage(), "ОШИБКА");
-            playFastErrorAnimation();
         }
     }
 
@@ -343,14 +345,12 @@ public class MainController {
 
         if (sigFiles.isEmpty()) {
             showAlert("Ошибка", "Не выбраны файлы подписей (.sig)!");
-            playFastErrorAnimation();
             return;
         }
 
         String defaultDocType = docTypeComboBox.getValue();
         if (defaultDocType == null) {
             showAlert("Ошибка", "Не выбран тип документа!");
-            playFastErrorAnimation();
             return;
         }
 
@@ -363,34 +363,37 @@ public class MainController {
         fileChooser.setTitle("Выберите PDF файл для размещения протокола");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF файлы", "*.pdf"));
 
-        Window window = mainContainer.getScene().getWindow();
-        File protocolPdfFile = fileChooser.showOpenDialog(window);
-
+        File protocolPdfFile = fileChooser.showOpenDialog(getWindow());
         if (protocolPdfFile == null) {
             return;
         }
 
         try {
-            showFastProcessingAnimation();
+            showProcessingAnimation();
 
-            List<String> signers = new ArrayList<>();
-            for (File sigFile : sigFiles) {
-                String signerInfo = PDFSigner.extractSignerInfo(sigFile);
-                SignatureDetails details = PDFSigner.parseSignatureFromText(signerInfo);
-                StringBuilder sb = new StringBuilder();
-                if (!details.getPosition().isEmpty()) {
-                    sb.append(details.getPosition());
-                }
-                if (!details.getCompany().isEmpty()) {
-                    if (sb.length() > 0) sb.append(", ");
-                    sb.append(details.getCompany());
-                }
-                if (!details.getFullName().isEmpty()) {
-                    if (sb.length() > 0) sb.append(" - ");
-                    sb.append(details.getFullName());
-                }
-                signers.add(sb.toString());
-            }
+            List<String> signers = sigFiles.stream()
+                    .map(sigFile -> {
+                        try {
+                            String signerInfo = PDFSigner.extractSignerInfo(sigFile);
+                            SignatureDetails details = PDFSigner.parseSignatureFromText(signerInfo);
+                            StringBuilder sb = new StringBuilder();
+                            if (!details.getPosition().isEmpty()) {
+                                sb.append(details.getPosition());
+                            }
+                            if (!details.getCompany().isEmpty()) {
+                                if (sb.length() > 0) sb.append(", ");
+                                sb.append(details.getCompany());
+                            }
+                            if (!details.getFullName().isEmpty()) {
+                                if (sb.length() > 0) sb.append(" - ");
+                                sb.append(details.getFullName());
+                            }
+                            return sb.toString();
+                        } catch (Exception e) {
+                            return sigFile.getName() + " (ошибка чтения)";
+                        }
+                    })
+                    .collect(Collectors.toList());
 
             Optional<PDFAreaSelector.SelectedArea> selectedArea =
                     new PDFAreaSelector(protocolPdfFile, settings.get().isAddBlankPage())
@@ -417,22 +420,18 @@ public class MainController {
                 hideProcessingAnimation();
                 showAlert("Успех", "Протокол проверки успешно создан!");
                 appendStatus("Протокол добавлен в файл: " + protocolPdfFile.getName(), "УСПЕХ");
-                employeeSignatureFile = null;
-
-                playFastEpicSuccessAnimation();
+                employeeSignatureFile = null; // Очищаем ссылку на файл
             }
         } catch (Exception e) {
             hideProcessingAnimation();
             showAlert("Ошибка", "Ошибка: " + e.getMessage());
             appendStatus("Ошибка при создании протокола: " + e.getMessage(), "ОШИБКА");
-            playFastErrorAnimation();
         }
     }
 
-    // БЫСТРЫЕ АНИМАЦИИ (в 4 раза быстрее)
+    // Упрощенные анимации
     private void playFastButtonAnimation() {
-        // Быстрая анимация нажатия кнопки
-        ScaleTransition scale = new ScaleTransition(Duration.millis(75), mainContainer); // было 150
+        ScaleTransition scale = new ScaleTransition(Duration.millis(75), mainContainer);
         scale.setFromX(1);
         scale.setFromY(1);
         scale.setToX(0.998);
@@ -440,78 +439,11 @@ public class MainController {
         scale.setAutoReverse(true);
         scale.setCycleCount(2);
         scale.play();
+        trackAnimation(scale);
     }
 
-    private void playFastSuccessAnimation() {
-        // Быстрая анимация успеха
-        Glow glow = new Glow();
-        glow.setLevel(0.3);
-
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(glow.levelProperty(), 0.1)),
-                new KeyFrame(Duration.millis(100), new KeyValue(glow.levelProperty(), 0.3)), // было 200
-                new KeyFrame(Duration.millis(200), new KeyValue(glow.levelProperty(), 0.1))  // было 400
-        );
-
-        mainContainer.setEffect(glow);
-        timeline.setOnFinished(e -> mainContainer.setEffect(new Glow(0.2)));
-        timeline.play();
-    }
-
-    private void playFastEpicSuccessAnimation() {
-        // Быстрая эпичная анимация
-        ParallelTransition parallel = new ParallelTransition();
-
-        // Свечение
-        Glow glow = new Glow();
-        glow.setLevel(0.6);
-        Timeline glowTimeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(glow.levelProperty(), 0.2)),
-                new KeyFrame(Duration.millis(150), new KeyValue(glow.levelProperty(), 0.6)), // было 300
-                new KeyFrame(Duration.millis(300), new KeyValue(glow.levelProperty(), 0.2))  // было 600
-        );
-
-        // Быстрая вибрация
-        TranslateTransition vibrate = new TranslateTransition(Duration.millis(50), mainContainer); // было 100
-        vibrate.setFromX(0);
-        vibrate.setToX(2);
-        vibrate.setAutoReverse(true);
-        vibrate.setCycleCount(3);
-
-        parallel.getChildren().addAll(glowTimeline, vibrate);
-        parallel.play();
-    }
-
-    private void playFastErrorAnimation() {
-        // Быстрая анимация ошибки
-        TranslateTransition shake = new TranslateTransition(Duration.millis(25), mainContainer); // было 50
-        shake.setFromX(0);
-        shake.setToX(6);
-        shake.setAutoReverse(true);
-        shake.setCycleCount(4);
-        shake.play();
-    }
-
-    private void playFastResetAnimation() {
-        // Быстрая анимация сброса
-        FadeTransition fade = new FadeTransition(Duration.millis(150), statusTextArea); // было 300
-        fade.setFromValue(0.8);
-        fade.setToValue(1);
-        fade.play();
-    }
-
-    private void showFastProcessingAnimation() {
+    private void showProcessingAnimation() {
         appendStatus("Выполняется обработка...", "ИНФО");
-
-        // Быстрая анимация пульсации
-        ScaleTransition pulse = new ScaleTransition(Duration.millis(500), statusTextArea); // было 1000
-        pulse.setFromX(1);
-        pulse.setFromY(1);
-        pulse.setToX(1.001);
-        pulse.setToY(1.001);
-        pulse.setAutoReverse(true);
-        pulse.setCycleCount(Animation.INDEFINITE);
-        pulse.play();
     }
 
     private void hideProcessingAnimation() {
@@ -522,34 +454,34 @@ public class MainController {
 
     private void appendStatus(String message, String type) {
         String timestamp = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
-        String prefix = "";
-
-        switch (type) {
-            case "УСПЕХ": prefix = "✓ "; break;
-            case "ОШИБКА": prefix = "✗ "; break;
-            case "ПРЕДУПРЕЖДЕНИЕ": prefix = "! "; break;
-            case "ИНФО": prefix = "• "; break;
-        }
+        String prefix = switch (type) {
+            case "УСПЕХ" -> "✓ ";
+            case "ОШИБКА" -> "✗ ";
+            case "ПРЕДУПРЕЖДЕНИЕ" -> "! ";
+            case "ИНФО" -> "• ";
+            default -> "";
+        };
 
         statusTextArea.appendText("[" + timestamp + "] " + prefix + message + "\n");
     }
 
     private void showAlert(String type, String message) {
-        Alert.AlertType alertType;
-        switch (type) {
-            case "ОШИБКА": alertType = Alert.AlertType.ERROR; break;
-            case "ПРЕДУПРЕЖДЕНИЕ": alertType = Alert.AlertType.WARNING; break;
-            default: alertType = Alert.AlertType.INFORMATION; break;
-        }
+        Alert.AlertType alertType = switch (type) {
+            case "ОШИБКА" -> Alert.AlertType.ERROR;
+            case "ПРЕДУПРЕЖДЕНИЕ" -> Alert.AlertType.WARNING;
+            default -> Alert.AlertType.INFORMATION;
+        };
 
         Alert alert = new Alert(alertType);
         alert.setTitle(type);
         alert.setHeaderText(null);
         alert.setContentText(message);
 
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/com/example/css/styles.css").toExternalForm());
-        dialogPane.getStyleClass().add("dialog-pane");
+        // Устанавливаем владельца для правильного позиционирования
+        Window window = getWindow();
+        if (window != null) {
+            alert.initOwner(window);
+        }
 
         alert.showAndWait();
     }
@@ -560,93 +492,101 @@ public class MainController {
                         mainContainer.getScene().getWindow() : null;
     }
 
-    private ProxyInfo parseProxyFile(File proxyFile) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(proxyFile);
+    // Упрощенный парсинг XML файла доверенности
+    private ProxyInfo parseProxyFile(File proxyFile) throws Exception {
+        // Простая реализация парсинга XML без внешних зависимостей
+        String content = new String(Files.readAllBytes(proxyFile.toPath()));
 
-        try {
-            XPathFactory xPathfactory = XPathFactory.newInstance();
-            XPath xpath = xPathfactory.newXPath();
+        // Извлекаем данные с помощью простых строковых операций
+        String number = extractXmlValue(content, "НомДовер");
+        String issueDate = extractXmlValue(content, "ДатаВыдДовер");
+        String expiryDate = extractXmlValue(content, "СрокДейст");
 
-            String number = xpath.evaluate("//*[local-name()='СвДов']/@НомДовер", document);
-            String issueDate = xpath.evaluate("//*[local-name()='СвДов']/@ДатаВыдДовер", document);
-            String expiryDate = xpath.evaluate("//*[local-name()='СвДов']/@СрокДейст", document);
+        if (number.isEmpty()) {
+            throw new IllegalArgumentException("Не найден номер доверенности");
+        }
+        if (issueDate.isEmpty()) {
+            throw new IllegalArgumentException("Не найдена дата выдачи доверенности");
+        }
+        if (expiryDate.isEmpty()) {
+            throw new IllegalArgumentException("Не найден срок действия доверенности");
+        }
 
-            if (number.isEmpty()) {
-                throw new IllegalArgumentException("Не найден номер доверенности");
+        // Простая попытка извлечь ФИО
+        String fullName = extractFullNameFromXml(content);
+
+        return new ProxyInfo(number, issueDate, expiryDate, fullName);
+    }
+
+    private String extractXmlValue(String xmlContent, String attributeName) {
+        // Простой поиск значения атрибута в XML
+        String pattern = attributeName + "=\"([^\"]*)\"";
+        java.util.regex.Pattern regex = java.util.regex.Pattern.compile(pattern);
+        java.util.regex.Matcher matcher = regex.matcher(xmlContent);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "";
+    }
+
+    private String extractFullNameFromXml(String xmlContent) {
+        // Простая попытка извлечь ФИО из XML
+        // Ищем блок с ФИО
+        if (xmlContent.contains("ФИО")) {
+            // Ищем фамилию, имя, отчество
+            String lastName = extractXmlValue(xmlContent, "Фамилия");
+            String firstName = extractXmlValue(xmlContent, "Имя");
+            String middleName = extractXmlValue(xmlContent, "Отчество");
+
+            if (!lastName.isEmpty() || !firstName.isEmpty() || !middleName.isEmpty()) {
+                return String.format("%s %s %s", lastName, firstName, middleName).trim();
             }
-            if (issueDate.isEmpty()) {
-                throw new IllegalArgumentException("Не найдена дата выдачи доверенности");
-            }
-            if (expiryDate.isEmpty()) {
-                throw new IllegalArgumentException("Не найден срок действия доверенности");
-            }
+        }
+        return "";
+    }
 
-            String fullName = "";
-            NodeList nameNodes = (NodeList) xpath.evaluate("//*[local-name()='СвУпПред']//*[local-name()='ФИО']",
-                    document, XPathConstants.NODESET);
-            if (nameNodes.getLength() > 0) {
-                Element nameElement = (Element) nameNodes.item(0);
-                String lastName = nameElement.getAttribute("Фамилия");
-                String firstName = nameElement.getAttribute("Имя");
-                String middleName = nameElement.getAttribute("Отчество");
-                fullName = String.format("%s %s %s", lastName, firstName, middleName).trim();
-            }
+    // Методы для управления анимациями и предотвращения утечек памяти
+    private void trackAnimation(Animation animation) {
+        activeAnimations.add(animation);
+        animation.setOnFinished(e -> activeAnimations.remove(animation));
+    }
 
-            return new ProxyInfo(number, issueDate, expiryDate, fullName);
-        } catch (XPathExpressionException e) {
-            throw new IllegalArgumentException("Ошибка при разборе XML файла доверенности", e);
+    private void cleanupResources() {
+        // Останавливаем все активные анимации
+        for (Animation animation : activeAnimations) {
+            if (animation != null) {
+                animation.stop();
+            }
+        }
+        activeAnimations.clear();
+
+        // Останавливаем анимацию обработки
+        if (processingAnimation != null) {
+            processingAnimation.stop();
+            processingAnimation = null;
+        }
+
+        // Очищаем коллекции
+        pdfFiles.clear();
+        sigFiles.clear();
+
+        // Помогаем сборщику мусора
+        System.gc();
+    }
+
+    // Метод для закрытия приложения и освобождения ресурсов
+    public void shutdown() {
+        cleanupResources();
+
+        // Дополнительная очистка если нужно
+        if (primaryStage != null) {
+            primaryStage.close();
         }
     }
 
-    private boolean checkProxyNameMatch(SignatureInfo signatureInfo, ProxyInfo proxyInfo) throws Exception {
-        if (proxyInfo == null) {
-            return false;
-        }
-
-        String proxyName = proxyInfo.getFullName();
-        boolean matchFound = false;
-        List<String> allSigners = new ArrayList<>();
-
-        allSigners.addAll(signatureInfo.bankSignerInfos);
-        allSigners.addAll(signatureInfo.rightSignerInfos);
-        allSigners.addAll(signatureInfo.additionalSignerInfos);
-
-        for (String signerInfo : allSigners) {
-            String[] lines = signerInfo.split("\n");
-            if (lines.length > 0) {
-                String ownerLine = lines[lines.length - 1];
-                String signerName = ownerLine.replace("Владелец: ", "").trim();
-
-                if (compareNames(signerName, proxyName)) {
-                    matchFound = true;
-                    break;
-                }
-            }
-        }
-
-        return matchFound;
-    }
-
-    private boolean compareNames(String name1, String name2) {
-        if (name1 == null || name2 == null) return false;
-
-        String[] parts1 = name1.trim().toLowerCase().split("\\s+");
-        String[] parts2 = name2.trim().toLowerCase().split("\\s+");
-
-        for (String part : parts1) {
-            if (!Arrays.asList(parts2).contains(part)) {
-                return false;
-            }
-        }
-        for (String part : parts2) {
-            if (!Arrays.asList(parts1).contains(part)) {
-                return false;
-            }
-        }
-
-        return true;
+    // Метод для закрытия окна
+    @FXML
+    private void handleClose() {
+        shutdown();
     }
 }
