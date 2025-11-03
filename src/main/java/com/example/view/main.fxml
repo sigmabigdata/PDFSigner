@@ -95,7 +95,7 @@
 
     </VBox>
 
-    <!-- Статус бар -->
+    <!-- Статус бар с кнопкой выхода -->
     <HBox styleClass="glass-status-bar" spacing="20" alignment="CENTER_LEFT">
         <HBox spacing="10" alignment="CENTER_LEFT">
             <FontAwesomeIconView glyphName="CIRCLE" size="8"
@@ -104,6 +104,12 @@
         </HBox>
 
         <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- Кнопка выхода в статус баре -->
+        <Button fx:id="exitButton" text="🚪 ВЫХОД" onAction="#handleExit"
+                style="-fx-background-color: #FF6B6B; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand;
+                       -fx-font-size: 11px;"/>
 
         <HBox spacing="15" alignment="CENTER_RIGHT">
             <Label text="PDF SIGNER PRO v2.0"

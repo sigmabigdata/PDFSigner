@@ -27,6 +27,7 @@ public class MainController {
     @FXML private VBox mainContainer;
     @FXML private ComboBox<String> docTypeComboBox;
     @FXML private TextArea statusTextArea;
+    @FXML private Button exitButton; // Добавляем кнопку выхода
 
     private Stage primaryStage;
     private ProxyInfo proxyInfo;
@@ -73,6 +74,7 @@ public class MainController {
     public void initialize() {
         setupModernDesign();
         startFastEntranceAnimations();
+        setupExitButton();
 
         docTypeComboBox.getItems().addAll(
                 "Кредитный договор",
@@ -95,6 +97,27 @@ public class MainController {
 
     private void setupModernDesign() {
         // Упрощенный дизайн без лишних эффектов
+    }
+
+    private void setupExitButton() {
+        // Настройка кнопки выхода если она есть в FXML
+        if (exitButton != null) {
+            exitButton.setOnAction(e -> handleExit());
+            // Стилизация кнопки выхода
+            exitButton.setStyle("-fx-background-color: #FF6B6B; -fx-text-fill: white; -fx-font-weight: bold; " +
+                    "-fx-background-radius: 15; -fx-padding: 10 20; -fx-cursor: hand;");
+
+            // Эффект при наведении
+            exitButton.setOnMouseEntered(e -> {
+                exitButton.setStyle("-fx-background-color: #FF5252; -fx-text-fill: white; -fx-font-weight: bold; " +
+                        "-fx-background-radius: 15; -fx-padding: 10 20; -fx-cursor: hand;");
+            });
+
+            exitButton.setOnMouseExited(e -> {
+                exitButton.setStyle("-fx-background-color: #FF6B6B; -fx-text-fill: white; -fx-font-weight: bold; " +
+                        "-fx-background-radius: 15; -fx-padding: 10 20; -fx-cursor: hand;");
+            });
+        }
     }
 
     private void startFastEntranceAnimations() {
@@ -146,6 +169,28 @@ public class MainController {
 
     private void applyModernStyles() {
         statusTextArea.setStyle("-fx-font-family: 'SF Mono', 'Cascadia Code', monospace; -fx-font-size: 13px;");
+    }
+
+    // Обработчик кнопки выхода
+    @FXML
+    private void handleExit() {
+        playFastButtonAnimation();
+
+        // Подтверждение выхода
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Подтверждение выхода");
+        confirmation.setHeaderText("Выход из приложения");
+        confirmation.setContentText("Вы уверены, что хотите выйти? Все несохраненные данные будут потеряны.");
+
+        Window window = getWindow();
+        if (window != null) {
+            confirmation.initOwner(window);
+        }
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            shutdown();
+        }
     }
 
     @FXML
@@ -224,6 +269,9 @@ public class MainController {
                             appendStatus("Выбран PDF файл: " + file.getName(), "УСПЕХ");
                         } else if (name.endsWith(".sig")) {
                             sigFiles.add(file);
+                            appendStatus("Выбран файл подписи: " + file.getName(), "УСПЕХ");
+                        } else {
+                            appendStatus("Пропущен неподдерживаемый файл: " + file.getName(), "ПРЕДУПРЕЖДЕНИЕ");
                         }
                     }
                 }),
@@ -240,6 +288,14 @@ public class MainController {
                                 appendStatus("  • " + sigFile.getName() + " (не удалось прочитать информацию о подписи)", "ПРЕДУПРЕЖДЕНИЕ");
                             }
                         }
+                    }
+
+                    // Проверяем наличие необходимых файлов
+                    if (pdfFiles.isEmpty()) {
+                        appendStatus("ВНИМАНИЕ: Не выбран PDF файл!", "ПРЕДУПРЕЖДЕНИЕ");
+                    }
+                    if (sigFiles.isEmpty()) {
+                        appendStatus("ВНИМАНИЕ: Не выбраны файлы подписей!", "ПРЕДУПРЕЖДЕНИЕ");
                     }
                 })
         );
@@ -584,7 +640,7 @@ public class MainController {
         }
     }
 
-    // Метод для закрытия окна
+    // Метод для закрытия окна (старый, оставляем для совместимости)
     @FXML
     private void handleClose() {
         shutdown();
