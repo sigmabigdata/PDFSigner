@@ -1,4 +1,4 @@
-name: Build Windows EXE - Fixed
+name: Build Windows Portable with Icon
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-windows:
+  build-portable:
     runs-on: windows-latest
 
     steps:
@@ -19,86 +19,238 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Create default icon (if not exists)
+        run: |
+          # Создаем простую иконку програмmatically как fallback
+          $iconDir = "src/main/resources/icons"
+          if (-not (Test-Path $iconDir)) {
+            New-Item -ItemType Directory -Path $iconDir -Force
+          }
+          if (-not (Test-Path "$iconDir/app.ico")) {
+            Write-Host "No icon found, jpackage will use default icon"
+          }
+
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Clean release directory
+      - name: Create Portable App Image with Icon
         run: |
-          if (Test-Path "release") {
-            Remove-Item -Recurse -Force "release"
-          }
+          # Clean release directory
+          Remove-Item -Path "release" -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path "release" -Force
-
-      - name: Create App Image
-        run: |
-          Write-Host "=== Creating app-image ==="
-          jpackage `
-            --type app-image `
-            --input target/ `
-            --main-jar nbdsig-1.0-SNAPSHOT.jar `
-            --main-class com.example.Launcher `
-            --name "PDFSignerPro" `
-            --app-version "2.0.0" `
-            --vendor "Anatoly Dyrul" `
-            --dest release/ `
-            --verbose
-          Write-Host "App-image created successfully"
-
-      - name: Check App Image
-        run: |
-          Write-Host "=== Checking app-image ==="
-          if (Test-Path "release/PDFSignerPro") {
-            Get-ChildItem "release/PDFSignerPro" -Recurse
-            Write-Host "App-image exists"
-          } else {
-            Write-Host "ERROR: App-image not created"
-            exit 1
-          }
-
-      - name: Create EXE from App Image
-        run: |
-          Write-Host "=== Creating EXE from app-image ==="
-          jpackage `
-            --type exe `
-            --app-image release/PDFSignerPro `
-            --name "PDFSignerPro" `
-            --dest release/ `
-            --win-shortcut `
-            --win-menu
-          Write-Host "EXE created successfully"
-
-      - name: Verify EXE File
-        run: |
-          Write-Host "=== Final files in release ==="
-          Get-ChildItem "release" -Recurse
           
-          $exeFiles = Get-ChildItem "release" -Filter "*.exe"
-          if ($exeFiles) {
-            Write-Host "SUCCESS: EXE file found!"
-            $exeFiles | ForEach-Object { Write-Host "EXE: $($_.Name)" }
+          Write-Host "=== Creating portable app-image with icon ==="
+          
+          # Параметры для jpackage
+          $jpackageArgs = @(
+            '--type', 'app-image',
+            '--input', 'target/',
+            '--main-jar', 'nbdsig-1.0-SNAPSHOT.jar',
+            '--main-class', 'com.example.Launcher',
+            '--name', 'PDFSignerPro',
+            '--app-version', '2.0.0',
+            '--vendor', 'Anatoly Dyrul',
+            '--copyright', 'Copyright 2024',
+            '--description', 'Professional PDF Signature Visualization System',
+            '--dest', 'release/',
+            '--verbose'
+          )
+          
+          # Добавляем иконку если она существует
+          if (Test-Path "src/main/resources/icons/app.ico") {
+            $jpackageArgs += '--icon'
+            $jpackageArgs += 'src/main/resources/icons/app.ico'
+            Write-Host "Using custom icon: src/main/resources/icons/app.ico"
           } else {
-            Write-Host "ERROR: No EXE file found"
+            Write-Host "Using default icon (custom icon not found)"
+          }
+          
+          # Запускаем jpackage
+          jpackage @jpackageArgs
+
+      - name: Verify App Image
+        run: |
+          Write-Host "=== Verifying app-image ==="
+          if (Test-Path "release/PDFSignerPro") {
+            $exePath = "release/PDFSignerPro/PDFSignerPro.exe"
+            if (Test-Path $exePath) {
+              Write-Host "SUCCESS: Portable app created at $exePath"
+              Write-Host "File size: $((Get-Item $exePath).Length / 1MB) MB"
+            } else {
+              Write-Host "ERROR: EXE file not found in app-image"
+              exit 1
+            }
+          } else {
+            Write-Host "ERROR: App-image directory not created"
             exit 1
           }
 
-      - name: Upload EXE Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: PDFSignerPro-Windows
-          path: release/*.exe
-          retention-days: 30
-
-      - name: Create Portable ZIP
+      - name: Create Enhanced Launcher BAT file
         run: |
-          if (Test-Path "release/PDFSignerPro") {
-            Compress-Archive -Path "release/PDFSignerPro/*" -DestinationPath "release/PDFSignerPro-Portable.zip"
-            Write-Host "Portable ZIP created"
-          }
+          Write-Host "=== Creating enhanced launcher BAT file ==="
+          $batContent = @"
+  @echo off
+  chcp 65001 > nul
+  title PDF Signer Pro v2.0.0
+  echo ========================================
+  echo     PDF Signer Pro - Portable Edition
+  echo ========================================
+  echo.
+  echo Запуск приложения...
+  echo.
+  cd /d "%~dp0PDFSignerPro"
+  PDFSignerPro.exe
+  if %errorlevel% neq 0 (
+  echo.
+  echo Ошибка запуска приложения!
+  echo Убедитесь, что антивирус не блокирует программу.
+  echo.
+  )
+  pause
+  "@
+        Set-Content -Path "release/Запустить PDF Signer Pro.bat" -Value $batContent -Encoding UTF8
+  
+  # Также создаем английскую версию
+  $batContentEN = @"
+  @echo off
+  chcp 65001 > nul
+  title PDF Signer Pro v2.0.0
+  echo ========================================
+  echo     PDF Signer Pro - Portable Edition
+  echo ========================================
+  echo.
+  echo Starting application...
+  echo.
+  cd /d "%~dp0PDFSignerPro"
+  PDFSignerPro.exe
+  if %errorlevel% neq 0 (
+  echo.
+  echo Error starting application!
+  echo Make sure antivirus is not blocking the program.
+  echo.
+  )
+  pause
+  "@
+        Set-Content -Path "release/Start PDF Signer Pro.bat" -Value $batContentEN -Encoding UTF8
 
-      - name: Upload Portable Artifact
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: PDFSignerPro-Portable
-          path: release/PDFSignerPro-Portable.zip
-          retention-days: 30
+- name: Create Comprehensive README
+  run: |
+    $readmeContent = @"
+  ╔═══════════════════════════════════════════════╗
+  ║            PDF SIGNER PRO v2.0.0              ║
+  ║        Portable Edition - Запуск без установки║
+  ╚═══════════════════════════════════════════════╝
+
+📁 СОДЕРЖАНИЕ АРХИВА:
+  ─────────────────────────────────────────────────
+  PDFSignerPro/          - Папка с приложением
+  ├── PDFSignerPro.exe   - Главная программа
+  ├── app/               - Файлы приложения
+  └── runtime/           - Встроенная Java
+  
+  Запустить PDF Signer Pro.bat  - Русский запускатель
+  Start PDF Signer Pro.bat      - English launcher
+
+🚀 КАК ЗАПУСТИТЬ:
+  ─────────────────────────────────────────────────
+СПОСОБ 1 (Простой):
+  1. Дважды щелкните "Запустить PDF Signer Pro.bat"
+
+СПОСОБ 2 (Прямой):
+  1. Откройте папку "PDFSignerPro"
+  2. Запустите "PDFSignerPro.exe"
+
+⚡ ОСОБЕННОСТИ:
+  ─────────────────────────────────────────────────
+  ✅ Не требует установки
+  ✅ Можно переносить на USB-флешке
+  ✅ Не оставляет следов в системе
+  ✅ Не требует прав администратора
+  ✅ Не требует установки Java
+  ✅ Полностью автономная работа
+
+🛡️ ВАЖНАЯ ИНФОРМАЦИЯ:
+  ─────────────────────────────────────────────────
+  • При первом запуске антивирус может временно
+  заблокировать программу - нужно разрешить запуск
+  • Для работы требуется Windows 10/11 (64-bit)
+• Размер: ~150-200 MB (включая Java)
+
+📞 ПОДДЕРЖКА:
+  ─────────────────────────────────────────────────
+Версия: 2.0.0
+Автор: Anatoly Dyrul
+
+Для работы с:
+  • PDF документами
+  • Электронными подписями (.sig)
+  • Визуализацией штампов ЭП
+  "@
+        Set-Content -Path "release/!!!ПРОЧТИ МЕНЯ!!!.txt" -Value $readmeContent -Encoding UTF8
+  
+  - name: Create Desktop INI for nice folder icon
+run: |
+  # Создаем desktop.ini для красивого отображения папки
+  $desktopIni = @"
+  [.ShellClassInfo]
+  IconResource=PDFSignerPro\PDFSignerPro.exe,0
+  [ViewState]
+  Mode=
+  Vid=
+  FolderType=Generic
+  "@
+        Set-Content -Path "release/desktop.ini" -Value $desktopIni -Encoding ASCII
+  # Устанавливаем атрибуты как системный файл
+  attrib +s +h "release/desktop.ini" 2>$null
+  
+  - name: Create Final ZIP Archive
+run: |
+  Write-Host "=== Creating final ZIP archive ==="
+  
+  # Создаем ZIP с красивым именем
+  $zipName = "PDFSignerPro-v2.0.0-Portable.zip"
+  Compress-Archive -Path "release/*" -DestinationPath $zipName -Force
+  
+  Write-Host "ZIP archive created: $zipName"
+  Write-Host "ZIP size: $((Get-Item $zipName).Length / 1MB) MB"
+
+- name: Upload Portable ZIP
+  uses: actions/upload-artifact@v4
+  with:
+    name: PDFSignerPro-Portable-v2.0.0
+    path: PDFSignerPro-v2.0.0-Portable.zip
+    retention-days: 90
+
+- name: Upload Individual Files (for testing)
+  uses: actions/upload-artifact@v4
+  with:
+    name: PDFSignerPro-Files-Debug
+    path: release/
+    retention-days: 7
+
+- name: Create GitHub Release
+  if: startsWith(github.ref, 'refs/tags/')
+  uses: softprops/action-gh-release@v1
+  with:
+    files: |
+      PDFSignerPro-v2.0.0-Portable.zip
+    body: |
+      # PDF Signer Pro v2.0.0 - Portable Edition
+      
+      ## 🚀 Portable версия - запуск без установки!
+      
+      ### Особенности:
+      - ✅ Не требует установки
+      - ✅ Работает с флешки
+      - ✅ Не оставляет следов в системе
+      - ✅ Не требует Java
+      - ✅ Полностью автономная
+      
+      ### Как использовать:
+      1. Скачайте и распакуйте архив
+      2. Запустите `Запустить PDF Signer Pro.bat`
+      3. Или запустите `PDFSignerPro.exe` напрямую
+      
+      ### Системные требования:
+      - Windows 10/11 (64-bit)
+      - ~200 MB свободного места
