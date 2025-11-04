@@ -1,14 +1,13 @@
-name: Build Windows - Alternative
+name: Quick Build Test
 
 on: [workflow_dispatch]
 
 jobs:
-  build-windows:
+  build-test:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -16,40 +15,19 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build with Maven
+      - name: Build
         run: mvn clean package -DskipTests
 
-      - name: Create App Image first
+      - name: Create EXE
         run: |
-          mkdir release
-          jpackage ^
-            --type app-image ^
-            --input target/ ^
-            --main-jar nbdsig-1.0-SNAPSHOT.jar ^
-            --main-class com.example.Launcher ^
-            --name "PDFSignerPro" ^
-            --app-version "2.0.0" ^
-            --dest release/ ^
-            --verbose
+          mkdir -p release
+          jpackage --type exe --input target/ --main-jar nbdsig-1.0-SNAPSHOT.jar --main-class com.example.Launcher --name TestApp --dest release/
 
-      - name: Create EXE from App Image
-        run: |
-          jpackage ^
-            --type exe ^
-            --app-image release/PDFSignerPro/ ^
-            --name "PDFSignerPro" ^
-            --dest release/ ^
-            --win-shortcut
+      - name: List Files
+        run: dir release\ /s
 
-      - name: Create ZIP package
-        run: |
-          cd release
-          Compress-Archive -Path PDFSignerPro-*.exe -DestinationPath "PDFSignerPro-Windows.zip"
-
-      - name: Upload Artifacts
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: PDFSignerPro-Windows
-          path: |
-            release/PDFSignerPro-*.exe
-            release/PDFSignerPro-Windows.zip
+          name: TestBuild
+          path: release/
