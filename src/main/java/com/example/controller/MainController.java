@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.util.PDFAreaSelector;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import com.example.model.*;
@@ -27,7 +28,6 @@ public class MainController {
     @FXML private VBox mainContainer;
     @FXML private ComboBox<String> docTypeComboBox;
     @FXML private TextArea statusTextArea;
-    @FXML private Button exitButton; // Добавляем кнопку выхода
 
     private Stage primaryStage;
     private ProxyInfo proxyInfo;
@@ -35,9 +35,9 @@ public class MainController {
     private List<File> pdfFiles = new ArrayList<>();
     private List<File> sigFiles = new ArrayList<>();
 
-    // Для управления анимациями и предотвращения утечек памяти
     private final List<Animation> activeAnimations = new ArrayList<>();
     private Timeline processingAnimation;
+    private Button exitButton; // Теперь создаем программно
 
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
@@ -72,9 +72,16 @@ public class MainController {
 
     @FXML
     public void initialize() {
+        System.out.println("=== MainController.initialize() called ===");
+
+        // Проверяем инъекцию основных компонентов
+        System.out.println("mainContainer: " + (mainContainer != null ? "INJECTED" : "NULL"));
+        System.out.println("docTypeComboBox: " + (docTypeComboBox != null ? "INJECTED" : "NULL"));
+        System.out.println("statusTextArea: " + (statusTextArea != null ? "INJECTED" : "NULL"));
+
         setupModernDesign();
         startFastEntranceAnimations();
-        setupExitButton();
+        createAndSetupExitButton(); // Создаем кнопку программно
 
         docTypeComboBox.getItems().addAll(
                 "Кредитный договор",
@@ -93,31 +100,125 @@ public class MainController {
 
         appendStatus("Система инициализирована", "УСПЕХ");
         appendStatus("Готов к работе", "ИНФО");
+
+        System.out.println("=== MainController.initialize() completed ===");
     }
 
     private void setupModernDesign() {
         // Упрощенный дизайн без лишних эффектов
     }
 
-    private void setupExitButton() {
-        // Настройка кнопки выхода если она есть в FXML
-        if (exitButton != null) {
-            exitButton.setOnAction(e -> handleExit());
-            // Стилизация кнопки выхода
+    private void createAndSetupExitButton() {
+        System.out.println("Creating exit button programmatically");
+
+        // Создаем кнопку выхода
+        exitButton = new Button("🚪 ВЫХОД");
+        exitButton.setOnAction(e -> {
+            System.out.println("Exit button clicked");
+            handleExit();
+        });
+
+        // Стилизация кнопки выхода
+        exitButton.setStyle("-fx-background-color: #FF6B6B; -fx-text-fill: white; -fx-font-weight: bold; " +
+                "-fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand; -fx-font-size: 11px;");
+
+        // Эффект при наведении
+        exitButton.setOnMouseEntered(e -> {
+            exitButton.setStyle("-fx-background-color: #FF5252; -fx-text-fill: white; -fx-font-weight: bold; " +
+                    "-fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand; -fx-font-size: 11px;");
+        });
+
+        exitButton.setOnMouseExited(e -> {
             exitButton.setStyle("-fx-background-color: #FF6B6B; -fx-text-fill: white; -fx-font-weight: bold; " +
-                    "-fx-background-radius: 15; -fx-padding: 10 20; -fx-cursor: hand;");
+                    "-fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand; -fx-font-size: 11px;");
+        });
 
-            // Эффект при наведении
-            exitButton.setOnMouseEntered(e -> {
-                exitButton.setStyle("-fx-background-color: #FF5252; -fx-text-fill: white; -fx-font-weight: bold; " +
-                        "-fx-background-radius: 15; -fx-padding: 10 20; -fx-cursor: hand;");
-            });
+        // Добавляем кнопку в интерфейс
+        addExitButtonToInterface();
+    }
 
-            exitButton.setOnMouseExited(e -> {
-                exitButton.setStyle("-fx-background-color: #FF6B6B; -fx-text-fill: white; -fx-font-weight: bold; " +
-                        "-fx-background-radius: 15; -fx-padding: 10 20; -fx-cursor: hand;");
-            });
+    private void addExitButtonToInterface() {
+        if (mainContainer != null) {
+            // Ищем статус бар (последний элемент в mainContainer)
+            for (Node node : mainContainer.getChildren()) {
+                if (node instanceof HBox) {
+                    HBox hbox = (HBox) node;
+                    // Проверяем, является ли это статус баром по стилю или содержимому
+                    if (hbox.getStyleClass().contains("glass-status-bar") ||
+                            containsStatusElements(hbox)) {
+                        System.out.println("Found status bar, adding exit button");
+
+                        // Добавляем кнопку перед последним элементом (информацией о версии)
+                        int insertIndex = Math.max(0, hbox.getChildren().size() - 1);
+                        hbox.getChildren().add(insertIndex, exitButton);
+                        System.out.println("Exit button added to status bar at index: " + insertIndex);
+                        return;
+                    }
+                }
+            }
+
+            // Если статус бар не найден, добавляем в панель инструментов
+            System.out.println("Status bar not found, trying to add to toolbar");
+            addExitButtonToToolbar();
+        } else {
+            System.err.println("mainContainer is null, cannot add exit button");
         }
+    }
+
+    private boolean containsStatusElements(HBox hbox) {
+        // Проверяем, содержит ли HBox элементы статус бара
+        for (Node node : hbox.getChildren()) {
+            if (node instanceof Label) {
+                Label label = (Label) node;
+                String text = label.getText();
+                if (text != null && (text.contains("READY") || text.contains("PDF SIGNER PRO"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void addExitButtonToToolbar() {
+        if (mainContainer != null) {
+            // Ищем панель инструментов
+            for (Node node : mainContainer.getChildren()) {
+                if (node instanceof HBox) {
+                    HBox hbox = (HBox) node;
+                    if (hbox.getStyleClass().contains("glass-toolbar") ||
+                            containsToolbarElements(hbox)) {
+                        System.out.println("Found toolbar, adding exit button");
+
+                        // Добавляем кнопку перед кнопками действий
+                        hbox.getChildren().add(hbox.getChildren().size() - 2, exitButton);
+                        System.out.println("Exit button added to toolbar");
+                        return;
+                    }
+                }
+            }
+
+            // Если не нашли подходящее место, добавляем в конец mainContainer
+            System.out.println("No suitable container found, adding to main container");
+            HBox exitButtonContainer = new HBox();
+            exitButtonContainer.setStyle("-fx-alignment: center; -fx-padding: 10;");
+            exitButtonContainer.getChildren().add(exitButton);
+            mainContainer.getChildren().add(exitButtonContainer);
+        }
+    }
+
+    private boolean containsToolbarElements(HBox hbox) {
+        // Проверяем, содержит ли HBox элементы панели инструментов
+        for (Node node : hbox.getChildren()) {
+            if (node instanceof Button) {
+                Button button = (Button) node;
+                String text = button.getText();
+                if (text != null && (text.contains("ПОДПИСЬ") || text.contains("ДОВЕРЕННОСТЬ") ||
+                        text.contains("ПОДПИСАТЬ") || text.contains("ПРОТОКОЛ"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void startFastEntranceAnimations() {
@@ -172,8 +273,8 @@ public class MainController {
     }
 
     // Обработчик кнопки выхода
-    @FXML
     private void handleExit() {
+        System.out.println("handleExit() called");
         playFastButtonAnimation();
 
         // Подтверждение выхода
@@ -189,9 +290,14 @@ public class MainController {
 
         Optional<ButtonType> result = confirmation.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
+            System.out.println("User confirmed exit");
             shutdown();
+        } else {
+            System.out.println("User cancelled exit");
         }
     }
+
+    // ... остальные методы без изменений (handleAddEmployeeSignature, handleNewDocument, etc.)
 
     @FXML
     private void handleAddEmployeeSignature() {
@@ -214,7 +320,6 @@ public class MainController {
     private void handleNewDocument() {
         playFastButtonAnimation();
 
-        // Очистка ресурсов
         cleanupResources();
 
         pdfFiles.clear();
@@ -229,11 +334,9 @@ public class MainController {
     private void handleSelectFiles() {
         playFastButtonAnimation();
 
-        // Создаем FileChooser который позволяет выбирать все файлы
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Выберите PDF файлы и файлы подписи (.sig)");
 
-        // Устанавливаем фильтр который показывает все поддерживаемые файлы
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Все поддерживаемые файлы", "*.pdf", "*.sig"),
                 new FileChooser.ExtensionFilter("PDF файлы", "*.pdf"),
@@ -248,7 +351,6 @@ public class MainController {
     }
 
     private void processSelectedFiles(List<File> selectedFiles) {
-        // Отмена предыдущей анимации обработки если есть
         if (processingAnimation != null) {
             processingAnimation.stop();
         }
@@ -290,7 +392,6 @@ public class MainController {
                         }
                     }
 
-                    // Проверяем наличие необходимых файлов
                     if (pdfFiles.isEmpty()) {
                         appendStatus("ВНИМАНИЕ: Не выбран PDF файл!", "ПРЕДУПРЕЖДЕНИЕ");
                     }
@@ -476,7 +577,7 @@ public class MainController {
                 hideProcessingAnimation();
                 showAlert("Успех", "Протокол проверки успешно создан!");
                 appendStatus("Протокол добавлен в файл: " + protocolPdfFile.getName(), "УСПЕХ");
-                employeeSignatureFile = null; // Очищаем ссылку на файл
+                employeeSignatureFile = null;
             }
         } catch (Exception e) {
             hideProcessingAnimation();
@@ -533,7 +634,6 @@ public class MainController {
         alert.setHeaderText(null);
         alert.setContentText(message);
 
-        // Устанавливаем владельца для правильного позиционирования
         Window window = getWindow();
         if (window != null) {
             alert.initOwner(window);
@@ -550,10 +650,8 @@ public class MainController {
 
     // Упрощенный парсинг XML файла доверенности
     private ProxyInfo parseProxyFile(File proxyFile) throws Exception {
-        // Простая реализация парсинга XML без внешних зависимостей
         String content = new String(Files.readAllBytes(proxyFile.toPath()));
 
-        // Извлекаем данные с помощью простых строковых операций
         String number = extractXmlValue(content, "НомДовер");
         String issueDate = extractXmlValue(content, "ДатаВыдДовер");
         String expiryDate = extractXmlValue(content, "СрокДейст");
@@ -568,14 +666,12 @@ public class MainController {
             throw new IllegalArgumentException("Не найден срок действия доверенности");
         }
 
-        // Простая попытка извлечь ФИО
         String fullName = extractFullNameFromXml(content);
 
         return new ProxyInfo(number, issueDate, expiryDate, fullName);
     }
 
     private String extractXmlValue(String xmlContent, String attributeName) {
-        // Простой поиск значения атрибута в XML
         String pattern = attributeName + "=\"([^\"]*)\"";
         java.util.regex.Pattern regex = java.util.regex.Pattern.compile(pattern);
         java.util.regex.Matcher matcher = regex.matcher(xmlContent);
@@ -586,10 +682,7 @@ public class MainController {
     }
 
     private String extractFullNameFromXml(String xmlContent) {
-        // Простая попытка извлечь ФИО из XML
-        // Ищем блок с ФИО
         if (xmlContent.contains("ФИО")) {
-            // Ищем фамилию, имя, отчество
             String lastName = extractXmlValue(xmlContent, "Фамилия");
             String firstName = extractXmlValue(xmlContent, "Имя");
             String middleName = extractXmlValue(xmlContent, "Отчество");
@@ -608,7 +701,6 @@ public class MainController {
     }
 
     private void cleanupResources() {
-        // Останавливаем все активные анимации
         for (Animation animation : activeAnimations) {
             if (animation != null) {
                 animation.stop();
@@ -616,17 +708,14 @@ public class MainController {
         }
         activeAnimations.clear();
 
-        // Останавливаем анимацию обработки
         if (processingAnimation != null) {
             processingAnimation.stop();
             processingAnimation = null;
         }
 
-        // Очищаем коллекции
         pdfFiles.clear();
         sigFiles.clear();
 
-        // Помогаем сборщику мусора
         System.gc();
     }
 
@@ -634,7 +723,6 @@ public class MainController {
     public void shutdown() {
         cleanupResources();
 
-        // Дополнительная очистка если нужно
         if (primaryStage != null) {
             primaryStage.close();
         }

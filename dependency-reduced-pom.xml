@@ -48,10 +48,10 @@
     </plugins>
   </build>
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <javafx.version>21.0.8</javafx.version>
     <maven.compiler.target>21</maven.compiler.target>
     <main.class>com.example.Launcher</main.class>
     <maven.compiler.source>21</maven.compiler.source>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <javafx.version>21.0.8</javafx.version>
   </properties>
 </project>

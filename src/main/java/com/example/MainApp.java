@@ -10,8 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.Bloom;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.Glow;
-import javafx.scene.effect.Lighting;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Circle;
@@ -112,31 +110,25 @@ public class MainApp extends Application {
     private void createParticleSystem() {
         for (int i = 0; i < 50; i++) {
             Circle particle = new Circle(1 + Math.random() * 3);
-
-            // Случайный неоновый цвет
             Color[] neonColors = {
                     Color.web("#00D4FF"), Color.web("#A855F7"),
                     Color.web("#FF0080"), Color.web("#00FF88")
             };
             Color particleColor = neonColors[(int)(Math.random() * neonColors.length)];
             particle.setFill(particleColor);
-
             particle.setEffect(new Glow(0.8 + Math.random() * 0.4));
-
             particle.setLayoutX(Math.random() * 1200);
             particle.setLayoutY(Math.random() * 800);
 
             particles.add(particle);
             loadingRoot.getChildren().add(particle);
 
-            // Сложная анимация частиц
             PathTransition path = new PathTransition();
             path.setNode(particle);
             path.setDuration(Duration.seconds(5 + Math.random() * 10));
             path.setCycleCount(Animation.INDEFINITE);
             path.setAutoReverse(true);
 
-            // Создаем случайный путь
             javafx.scene.shape.Path particlePath = new javafx.scene.shape.Path();
             particlePath.getElements().add(new javafx.scene.shape.MoveTo(
                     particle.getLayoutX(), particle.getLayoutY()));
@@ -152,7 +144,6 @@ public class MainApp extends Application {
             path.setPath(particlePath);
             path.play();
 
-            // Анимация пульсации
             FadeTransition pulse = new FadeTransition(Duration.seconds(1 + Math.random() * 2), particle);
             pulse.setFromValue(0.2);
             pulse.setToValue(1.0);
@@ -176,7 +167,6 @@ public class MainApp extends Application {
             matrixLines.add(matrixLine);
             loadingRoot.getChildren().add(matrixLine);
 
-            // Анимация падающего кода
             TranslateTransition fall = new TranslateTransition(Duration.seconds(2 + Math.random() * 3), matrixLine);
             fall.setFromY(-100);
             fall.setToY(900);
@@ -204,7 +194,6 @@ public class MainApp extends Application {
 
             loadingRoot.getChildren().add(hologramLine);
 
-            // Анимация сканирования
             StrokeTransition scan = new StrokeTransition(Duration.seconds(4), hologramLine);
             scan.setFromValue(Color.web("#00D4FF"));
             scan.setToValue(Color.web("#A855F7"));
@@ -219,17 +208,11 @@ public class MainApp extends Application {
         content.setStyle("-fx-alignment: center; -fx-padding: 100;");
         content.setEffect(new Bloom(0.8));
 
-        // Анимированный логотип с неоном
         Pane logoContainer = createAnimatedNeonLogo();
-
-        // Прогресс бар с неоновым свечением
         StackPane progressContainer = createNeonProgressBar();
-
-        // Текст загрузки с эффектом печатания
         Text loadingText = createTypingText("ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ PDF SIGNER PRO");
 
         content.getChildren().addAll(logoContainer, progressContainer, loadingText);
-
         return content;
     }
 
@@ -237,21 +220,18 @@ public class MainApp extends Application {
         Pane logo = new Pane();
         logo.setPrefSize(400, 200);
 
-        // Внешнее кольцо
         Circle outerRing = new Circle(100);
         outerRing.setFill(Color.TRANSPARENT);
         outerRing.setStroke(Color.web("#00D4FF"));
         outerRing.setStrokeWidth(4);
         outerRing.setEffect(new Glow(0.8));
 
-        // Внутреннее кольцо
         Circle innerRing = new Circle(70);
         innerRing.setFill(Color.TRANSPARENT);
         innerRing.setStroke(Color.web("#FF0080"));
         innerRing.setStrokeWidth(3);
         innerRing.setEffect(new Glow(0.7));
 
-        // Центральный круг
         Circle centerCircle = new Circle(40);
         centerCircle.setFill(Color.TRANSPARENT);
         centerCircle.setStroke(Color.web("#00FF88"));
@@ -260,7 +240,6 @@ public class MainApp extends Application {
 
         logo.getChildren().addAll(outerRing, innerRing, centerCircle);
 
-        // Сложные анимации вращения
         RotateTransition rotateOuter = new RotateTransition(Duration.seconds(6), outerRing);
         rotateOuter.setByAngle(360);
         rotateOuter.setCycleCount(Animation.INDEFINITE);
@@ -273,7 +252,6 @@ public class MainApp extends Application {
         rotateCenter.setByAngle(360);
         rotateCenter.setCycleCount(Animation.INDEFINITE);
 
-        // Анимация свечения
         Timeline glowAnimation = new Timeline(
                 new KeyFrame(Duration.ZERO,
                         new KeyValue(outerRing.strokeProperty(), Color.web("#00D4FF")),
@@ -305,14 +283,12 @@ public class MainApp extends Application {
         StackPane container = new StackPane();
         container.setStyle("-fx-padding: 30;");
 
-        // Фон прогресс бара
         Rectangle bg = new Rectangle(400, 10);
         bg.setArcWidth(10);
         bg.setArcHeight(10);
         bg.setFill(Color.rgb(255, 255, 255, 0.1));
         bg.setEffect(new BoxBlur(5, 5, 2));
 
-        // Сам прогресс бар
         Rectangle progress = new Rectangle(0, 10);
         progress.setArcWidth(10);
         progress.setArcHeight(10);
@@ -321,13 +297,11 @@ public class MainApp extends Application {
 
         container.getChildren().addAll(bg, progress);
 
-        // Анимация прогресс бара
         Timeline progressAnimation = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(progress.widthProperty(), 0)),
                 new KeyFrame(Duration.seconds(2.5), new KeyValue(progress.widthProperty(), 400))
         );
 
-        // Анимация цвета прогресс бара
         Timeline colorAnimation = new Timeline(
                 new KeyFrame(Duration.ZERO,
                         new KeyValue(progress.fillProperty(), createProgressGradient())),
@@ -370,7 +344,6 @@ public class MainApp extends Application {
         text.setFill(Color.web("#00FF88"));
         text.setEffect(new Glow(0.7));
 
-        // Эффект печатания
         final int[] currentLength = {0};
         Timeline typing = new Timeline();
 
@@ -385,7 +358,6 @@ public class MainApp extends Application {
         typing.setCycleCount(1);
         typing.play();
 
-        // Мигающий курсор
         Rectangle cursor = new Rectangle(2, 25, Color.web("#00FF88"));
         cursor.setLayoutX(text.getLayoutBounds().getWidth());
         cursor.setEffect(new Glow(0.8));
@@ -396,7 +368,6 @@ public class MainApp extends Application {
         blink.setCycleCount(Animation.INDEFINITE);
         blink.setAutoReverse(true);
 
-        // Привязываем курсор к тексту
         text.boundsInLocalProperty().addListener((obs, old, newVal) -> {
             cursor.setLayoutX(newVal.getWidth());
         });
@@ -410,25 +381,27 @@ public class MainApp extends Application {
     private void loadMainApplication() {
         new Thread(() -> {
             try {
-                // Имитация загрузки ресурсов
                 simulateResourceLoading();
 
                 javafx.application.Platform.runLater(() -> {
                     try {
+                        System.out.println("Loading FXML from: /com/example/view/main.fxml");
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/view/main.fxml"));
                         Parent root = loader.load();
+                        System.out.println("FXML loaded successfully");
 
                         MainController controller = loader.getController();
+                        System.out.println("Controller: " + (controller != null ? "LOADED" : "NULL"));
                         controller.setPrimaryStage(primaryStage);
 
                         Scene mainScene = new Scene(root);
                         mainScene.setFill(Color.TRANSPARENT);
                         mainScene.getStylesheets().add(getClass().getResource("/com/example/css/styles.css").toExternalForm());
 
-                        // Эпичный переход с эффектом взрыва частиц
                         createEpicParticleTransition(mainScene);
 
                     } catch (Exception e) {
+                        System.err.println("Error loading main application: " + e.getMessage());
                         e.printStackTrace();
                         showCyberErrorScreen(e.getMessage());
                     }
@@ -456,10 +429,8 @@ public class MainApp extends Application {
     }
 
     private void createEpicParticleTransition(Scene mainScene) {
-        // Создаем эффект взрыва частиц
         createParticleExplosion();
 
-        // Анимация исчезновения загрузочного экрана
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), loadingRoot);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
@@ -475,7 +446,6 @@ public class MainApp extends Application {
         exitAnimation.setOnFinished(e -> {
             primaryStage.setScene(mainScene);
 
-            // Эпичное появление основного интерфейса
             FadeTransition fadeIn = new FadeTransition(Duration.seconds(1.5), mainScene.getRoot());
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
@@ -502,12 +472,11 @@ public class MainApp extends Application {
             Circle explosionParticle = new Circle(1 + Math.random() * 4);
             explosionParticle.setFill(Color.web("#00D4FF"));
             explosionParticle.setEffect(new Glow(0.9));
-            explosionParticle.setLayoutX(600); // Центр экрана
+            explosionParticle.setLayoutX(600);
             explosionParticle.setLayoutY(400);
 
             loadingRoot.getChildren().add(explosionParticle);
 
-            // Анимация разлета частиц
             TranslateTransition explode = new TranslateTransition(Duration.seconds(1), explosionParticle);
             explode.setByX((Math.random() - 0.5) * 1000);
             explode.setByY((Math.random() - 0.5) * 800);
