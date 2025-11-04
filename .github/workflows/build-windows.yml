@@ -1,33 +1,106 @@
-name: Quick Build Test
+name: Build Windows EXE - Universal
 
-on: [workflow_dispatch]
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
 
 jobs:
-  build-test:
+  build-windows:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build
+      - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Create EXE
+      - name: Debug - Check JAR file
         run: |
-          mkdir -p release
-          jpackage --type exe --input target/ --main-jar nbdsig-1.0-SNAPSHOT.jar --main-class com.example.Launcher --name TestApp --dest release/
+          echo "=== Checking JAR file ==="
+          dir target\*.jar
+          echo "JAR size:"
+          (Get-Item "target\nbdsig-1.0-SNAPSHOT.jar").Length / 1MB
 
-      - name: List Files
-        run: dir release\ /s
+      - name: Create App Image (Step 1)
+        run: |
+          # Clean release directory
+          if exist release rmdir /s /q release
+          mkdir release
+          
+          echo "=== Creating app-image ==="
+          jpackage ^
+            --type app-image ^
+            --input target/ ^
+            --main-jar nbdsig-1.0-SNAPSHOT.jar ^
+            --main-class com.example.Launcher ^
+            --name "PDFSignerPro" ^
+            --app-version "2.0.0" ^
+            --vendor "Anatoly Dyrul" ^
+            --dest release/ ^
+            --verbose
+          echo "App-image created successfully"
 
-      - name: Upload
+      - name: Debug - Check App Image
+        run: |
+          echo "=== Checking app-image ==="
+          if exist release\PDFSignerPro (
+            dir release\PDFSignerPro /s
+            echo "App-image exists"
+          ) else (
+            echo "ERROR: App-image not created"
+            exit 1
+          )
+
+      - name: Create EXE from App Image (Step 2)
+        run: |
+          echo "=== Creating EXE from app-image ==="
+          jpackage ^
+            --type exe ^
+            --app-image release/PDFSignerPro ^
+            --name "PDFSignerPro" ^
+            --dest release/ ^
+            --win-shortcut ^
+            --win-menu
+          echo "EXE created successfully"
+
+      - name: Verify EXE File
+        run: |
+          echo "=== Final files in release ==="
+          dir release\ /s
+          
+          if exist release\PDFSignerPro-*.exe (
+            echo "SUCCESS: EXE file found!"
+            dir release\PDFSignerPro-*.exe
+          ) else (
+            echo "ERROR: No EXE file found"
+            echo "Available files:"
+            dir release\ /s
+            exit 1
+          )
+
+      - name: Upload EXE Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TestBuild
-          path: release/
+          name: PDFSignerPro-Windows
+          path: release/PDFSignerPro-*.exe
+          retention-days: 30
+
+      - name: Upload Portable Version
+        run: |
+          cd release
+          Compress-Archive -Path PDFSignerPro\* -DestinationPath "PDFSignerPro-Portable.zip"
+
+      - name: Upload Portable Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDFSignerPro-Portable
+          path: release/PDFSignerPro-Portable.zip
+          retention-days: 30
