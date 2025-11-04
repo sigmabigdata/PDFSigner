@@ -1,20 +1,16 @@
-name: Build Windows EXE
+name: Build Windows - Alternative
 
-on:
-  push:
-    tags: ['v*']
-  workflow_dispatch:
+on: [workflow_dispatch]
 
 jobs:
   build-windows:
     runs-on: windows-latest
-    timeout-minutes: 10
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Java 21
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -23,43 +19,37 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Create Windows EXE
+      - name: Create App Image first
         run: |
-          # Очистим папку release
-          if exist release rmdir /s /q release
           mkdir release
-          
-          echo "Creating EXE with jpackage..."
           jpackage ^
-            --type exe ^
+            --type app-image ^
             --input target/ ^
             --main-jar nbdsig-1.0-SNAPSHOT.jar ^
             --main-class com.example.Launcher ^
             --name "PDFSignerPro" ^
             --app-version "2.0.0" ^
-            --vendor "Anatoly Dyrul" ^
-            --copyright "Copyright 2024" ^
-            --description "PDF Signature Visualization System" ^
-            --win-shortcut ^
             --dest release/ ^
             --verbose
 
-      - name: Verify created files
+      - name: Create EXE from App Image
         run: |
-          echo "=== Files in release folder ==="
-          dir release\ /s
-          echo "=== EXE file details ==="
-          if exist release\*.exe (
-            dir release\*.exe
-            echo "EXE file exists and ready for upload!"
-          ) else (
-            echo "ERROR: No EXE file found!"
-            exit 1
-          )
+          jpackage ^
+            --type exe ^
+            --app-image release/PDFSignerPro/ ^
+            --name "PDFSignerPro" ^
+            --dest release/ ^
+            --win-shortcut
 
-      - name: Upload EXE as artifact
+      - name: Create ZIP package
+        run: |
+          cd release
+          Compress-Archive -Path PDFSignerPro-*.exe -DestinationPath "PDFSignerPro-Windows.zip"
+
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: PDFSignerPro-Windows
-          path: release/*.exe
-          retention-days: 30
+          path: |
+            release/PDFSignerPro-*.exe
+            release/PDFSignerPro-Windows.zip
