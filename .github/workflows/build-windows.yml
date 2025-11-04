@@ -1,69 +1,24 @@
-name: Build Windows EXE - Fast
+name: Quick Test Build
 
-on:
-  push:
-    tags: ['v*']
-  workflow_dispatch:
+on: [workflow_dispatch]
 
 jobs:
-  build-windows:
+  quick-build:
     runs-on: windows-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Java 21
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            maven-
+      - name: Quick Maven Build
+        run: mvn clean package -DskipTests -q
 
-      - name: Build with Maven
-        run: mvn clean package -DskipTests --no-transfer-progress
-
-      - name: Quick verification
+      - name: Simple jpackage
         run: |
-          echo "JAR file size:"
-          ls -la target/*.jar
-          echo "Files in target directory:"
-          dir target\
-
-      - name: Create Windows EXE
-        run: |
-          echo "Starting jpackage..."
-          jpackage ^
-            --type app-image ^
-            --input target/ ^
-            --main-jar nbdsig-1.0-SNAPSHOT.jar ^
-            --main-class com.example.Launcher ^
-            --name "PDFSignerPro" ^
-            --app-version "2.0.0" ^
-            --vendor "Anatoly Dyrul" ^
-            --dest release/ ^
-            --verbose
-          echo "jpackage completed!"
-
-      - name: Create EXE from app-image
-        run: |
-          jpackage ^
-            --type exe ^
-            --app-image release/PDFSignerPro/ ^
-            --name "PDFSignerPro" ^
-            --dest release/ ^
-            --win-shortcut
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: PDFSignerPro-Windows
-          path: release/*.exe
+          jpackage --type exe --input target/ --main-jar nbdsig-1.0-SNAPSHOT.jar --main-class com.example.Launcher --name TestApp --dest release/
