@@ -1,15 +1,14 @@
-name: Build Windows EXE
+name: Build Windows EXE - Fast
 
 on:
   push:
     tags: ['v*']
   workflow_dispatch:
-  pull_request:
-    branches: [ main, master ]
 
 jobs:
   build-windows:
     runs-on: windows-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
@@ -20,52 +19,51 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: 'maven'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: mvn clean package -DskipTests --no-transfer-progress
 
-      - name: Verify JAR file
+      - name: Quick verification
         run: |
-          echo "Checking if JAR file exists..."
-          dir target\*.jar
-          echo "JAR file details:"
-          java -jar target\nbdsig-1.0-SNAPSHOT.jar --version || echo "JAR executed successfully"
+          echo "JAR file size:"
+          ls -la target/*.jar
+          echo "Files in target directory:"
+          dir target\
 
-      - name: Create Windows EXE with jpackage
+      - name: Create Windows EXE
         run: |
-          echo "Creating Windows EXE..."
+          echo "Starting jpackage..."
           jpackage ^
-            --type exe ^
+            --type app-image ^
             --input target/ ^
             --main-jar nbdsig-1.0-SNAPSHOT.jar ^
             --main-class com.example.Launcher ^
             --name "PDFSignerPro" ^
             --app-version "2.0.0" ^
             --vendor "Anatoly Dyrul" ^
-            --copyright "Copyright 2024" ^
-            --description "Professional PDF Signature Visualization System" ^
-            --win-shortcut ^
-            --win-dir-chooser ^
-            --win-menu ^
             --dest release/ ^
             --verbose
+          echo "jpackage completed!"
 
-      - name: List created files
+      - name: Create EXE from app-image
         run: |
-          echo "Created files in release folder:"
-          dir release\ /s
+          jpackage ^
+            --type exe ^
+            --app-image release/PDFSignerPro/ ^
+            --name "PDFSignerPro" ^
+            --dest release/ ^
+            --win-shortcut
 
-      - name: Upload Windows EXE as artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PDFSignerPro-Windows
           path: release/*.exe
-          retention-days: 30
-
-      - name: Upload entire release folder
-        uses: actions/upload-artifact@v4
-        with:
-          name: Release-Folder
-          path: release/
-          retention-days: 30
