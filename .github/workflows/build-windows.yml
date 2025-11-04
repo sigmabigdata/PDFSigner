@@ -1,24 +1,65 @@
-name: Quick Test Build
+name: Build Windows EXE
 
-on: [workflow_dispatch]
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
 
 jobs:
-  quick-build:
+  build-windows:
     runs-on: windows-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Quick Maven Build
-        run: mvn clean package -DskipTests -q
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
 
-      - name: Simple jpackage
+      - name: Create Windows EXE
         run: |
-          jpackage --type exe --input target/ --main-jar nbdsig-1.0-SNAPSHOT.jar --main-class com.example.Launcher --name TestApp --dest release/
+          # Очистим папку release
+          if exist release rmdir /s /q release
+          mkdir release
+          
+          echo "Creating EXE with jpackage..."
+          jpackage ^
+            --type exe ^
+            --input target/ ^
+            --main-jar nbdsig-1.0-SNAPSHOT.jar ^
+            --main-class com.example.Launcher ^
+            --name "PDFSignerPro" ^
+            --app-version "2.0.0" ^
+            --vendor "Anatoly Dyrul" ^
+            --copyright "Copyright 2024" ^
+            --description "PDF Signature Visualization System" ^
+            --win-shortcut ^
+            --dest release/ ^
+            --verbose
+
+      - name: Verify created files
+        run: |
+          echo "=== Files in release folder ==="
+          dir release\ /s
+          echo "=== EXE file details ==="
+          if exist release\*.exe (
+            dir release\*.exe
+            echo "EXE file exists and ready for upload!"
+          ) else (
+            echo "ERROR: No EXE file found!"
+            exit 1
+          )
+
+      - name: Upload EXE as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDFSignerPro-Windows
+          path: release/*.exe
+          retention-days: 30
